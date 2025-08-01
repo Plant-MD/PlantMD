@@ -57,7 +57,7 @@ function DragOverComponent({
         className={`relative rounded-2xl border-[2px] border-mint bg-white/95 p-8 md:px-[100px] shadow-lg backdrop-blur-sm transition-all duration-300
     ${isDragOver
             ? "border-mint bg-green-50/50 shadow-xl"
-            : "border-forest-green hover:border-mint hover:shadow-xl"}
+            : "border-forest hover:border-mint hover:shadow-xl"}
        `}
       >
 
