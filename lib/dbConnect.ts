@@ -17,7 +17,9 @@ export const dbConnect = async (): Promise<void> => {
     // Use environment variable or default value for MongoDB URI
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-      throw new Error("MongoDB connection URI is not defined in environment variables.");
+      console.warn("MongoDB connection URI is not defined in environment variables. Using fallback mode.");
+      // Don't exit the process, just return without connecting
+      return;
     }
 
     const db = await mongoose.connect(mongoUri); // No need for additional options in Mongoose v6+
@@ -26,7 +28,8 @@ export const dbConnect = async (): Promise<void> => {
     console.log(`Database connected successfully (State: ${connection.isConnected}).`);
   } catch (error) {
     console.error("Database connection failed. Error details:", error);
-    process.exit(1); // Exit the process in case of a connection failure
+    console.warn("Continuing without database connection. Some features may not work.");
+    // Don't exit the process, just log the error and continue
   }
 };
 

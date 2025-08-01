@@ -1,139 +1,124 @@
-'use client';
-export const dynamic = 'force-dynamic';
+"use client";
+import React, { useEffect, useState } from "react";
+import DiagnosisCard from "@/components/shared/DiagnosisCard";
+import axios from "axios";
+import { Leaf, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import MainDiagnosis from "@/components/shared/Diagnosis";
 
-import React, { Suspense, useEffect, useState } from 'react';
-import Link from 'next/link';
-import DiagnosisCard from './DiagnosisCard';
-import DiagnosisHeader from './components/DiagnosisHeader';
-import DiagnosisActions from './components/DiagnosisActions';
-import DiagnosisSummary from './components/DiagnosisSummary';
-import { useSearchParams } from 'next/navigation';
 
-export default function DiagnosisPage() {
-  const searchParams = useSearchParams();
-  const [diagnoses, setDiagnoses] = useState<any[]>([]);
+function Diagnosis() {
+  const [plants, setPlants] = useState<any[]>([]);
+  const [plantType, setPlantType] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('🔍 [DIAGNOSIS] useEffect triggered, checking for predictions...');
-    const queryPredictions = searchParams.get('predictions');
-    console.log('📋 [DIAGNOSIS] Query predictions found:', queryPredictions ? 'Yes' : 'No');
-    
-    if (queryPredictions) {
+    const fetchPlants = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const predictionsParam = params.get("predictions");
+      const plantParam = params.get("plant");
+
+      if (!predictionsParam) return;
+
+      setPlantType(plantParam || 'plant');
+
       try {
-        console.log('🔓 [DIAGNOSIS] Decoding predictions from URL...');
-        const decodedPredictions = JSON.parse(decodeURIComponent(queryPredictions));
-        console.log('📊 [DIAGNOSIS] Decoded predictions:', decodedPredictions);
-        
-        const formattedDiagnoses = decodedPredictions.map((item: any) => ({
-          disease: item.class,
-          confidence: parseFloat(item.confidence) * 100,
-          severity: 'Moderate',
-          description: 'Detailed analysis of the plant condition is in progress.',
-          symptoms: ['Spots on leaves', 'Yellowing'],
-          causes: ['Fungal infection', 'Moisture'],
-        }));
-        console.log('✅ [DIAGNOSIS] Formatted diagnoses:', formattedDiagnoses);
-        setDiagnoses(formattedDiagnoses);
+        const predictions = JSON.parse(decodeURIComponent(predictionsParam));
+        console.log('Parsed predictions:', predictions);
+
+        // Fetch all plant data in parallel with error handling
+        const responses = await Promise.allSettled(
+          predictions.map((prediction: any) => {
+            const diseaseName = prediction.class;
+            const confidence = prediction.confidence;
+
+            return axios.get(
+              `/api/predict?disease_name=${encodeURIComponent(diseaseName)}&confidence=${encodeURIComponent(confidence)}`
+            );
+          })
+        );
+
+        // Process successful responses and create fallback data for failed ones
+        const processedPlants = responses.map((response, index) => {
+          if (response.status === 'fulfilled') {
+            return response.value.data;
+          } else {
+            console.error(`Failed to fetch data for prediction ${index}:`, response.reason);
+            // Create fallback data structure
+            const prediction = predictions[index];
+            return {
+              success: true,
+              disease: {
+                _id: `fallback-${index}`,
+                disease_code: 'N/A',
+                disease_name: prediction.class.replace(/_/g, ' '),
+                scientific_name: 'Unknown',
+                common_plants: ['Unknown'],
+                category: 'Unknown',
+                risk_factor: 'Unknown'
+              },
+              cure: {
+                _id: `fallback-cure-${index}`,
+                disease_id: `fallback-${index}`,
+                disease: prediction.class.replace(/_/g, ' '),
+                cure: ['Treatment information not available'],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+              },
+              confidence: Number(prediction.confidence) * 100
+            };
+          }
+        });
+
+        setPlants(processedPlants);
       } catch (error) {
-        console.error('💥 [DIAGNOSIS] Failed to parse predictions:', error);
-        setDiagnoses([]);
+        console.error("Error fetching plants:", error);
+        setPlants([]);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      console.log('❌ [DIAGNOSIS] No predictions found in URL parameters');
-      setDiagnoses([]);
-    }
-    console.log('🏁 [DIAGNOSIS] Setting loading to false');
-    setLoading(false);
-  }, [searchParams]);
+    };
 
-  // Calculate statistics
-  const diagnosisCount = diagnoses.length;
-  const totalConfidence = diagnosisCount > 0 
-    ? diagnoses.reduce((sum, d) => sum + d.confidence, 0) / diagnosisCount 
-    : 0;
-
-  const handleSaveReport = () => {
-    // Implementation for saving report
-    console.log('Saving diagnosis report...');
-    // You can implement actual save functionality here
-  };
-
-  const handleShareResults = () => {
-    // Implementation for sharing results
-    console.log('Sharing diagnosis results...');
-    // You can implement actual share functionality here
-  };
+    fetchPlants();
+  }, []);
 
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-3 border-green-200 border-t-green-600 mx-auto mb-4"></div>
-          <p className="text-green-700 font-medium">Analyzing your plant...</p>
-        </div>
-      </div>
-    }>
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 px-6 py-12">
-        <div className="max-w-6xl mx-auto">
-          {/* Loading State */}
-          {loading ? (
-            <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-12 w-12 border-3 border-green-200 border-t-green-600 mx-auto mb-4"></div>
-              <p className="text-green-700 font-medium">Processing your results...</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+          </div>
+        ) : plants.length > 0 ? (
+          <div className="space-y-6">
+            <MainDiagnosis {...plants[0]} />
+            <div className="text-left mb-8">
+              <h2 className="text-4xl font-oswald font-bold text-gray-600 mb-2 ml-2">
+                More Results
+              </h2>
+
             </div>
-          ) : diagnoses.length > 0 ? (
-            <>
-              {/* Diagnosis Header */}
-              <DiagnosisHeader 
-                diagnosisCount={diagnosisCount}
-                totalConfidence={totalConfidence}
-              />
 
-              {/* Diagnosis Summary */}
-              <DiagnosisSummary diagnoses={diagnoses} />
-
-              {/* Detailed Diagnosis Cards */}
-              <div className="space-y-6 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Detailed Analysis
-                </h2>
-                {diagnoses.map((item, i) => (
-                  <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${i * 150}ms` }}>
-                    <DiagnosisCard {...item} />
-                  </div>
-                ))}
+            {plants.slice(1, 3).map((plant, index) => (
+              <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <DiagnosisCard {...plant} />
               </div>
-
-              {/* Action Buttons */}
-              <DiagnosisActions 
-                onSaveReport={handleSaveReport}
-                onShareResults={handleShareResults}
-              />
-            </>
-          ) : (
-            /* No Results State */
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md mx-auto">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Results Yet</h3>
-              <p className="text-gray-600 mb-6">Scan a plant to view diagnosis results here.</p>
-              <Link href="/" className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Start Scanning
-              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Leaf className="h-10 w-10 text-gray-400" />
             </div>
-          )}
-        </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Analysis Results</h3>
+            <p className="text-gray-600">No disease predictions were found for your plant.</p>
+          </div>
+        )}
       </div>
-    </Suspense>
+    </div>
   );
 }
+
+export default Diagnosis;

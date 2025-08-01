@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import Layout from "@/components/Layout/layout"
 import Footer from "@/components/Layout/Footer"
+import Header from "@/components/Layout/Header"
 import PostHogProvider from "@/components/PostHogProvider"
 import "./globals.css"
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <PostHogProvider>
           <Layout>
+            <Header/>
             {children}
           </Layout>
           <Footer />

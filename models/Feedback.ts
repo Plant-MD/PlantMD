@@ -5,6 +5,7 @@ export interface Feedback extends Document {
     userID?: string;
     stars: number;
     description: string;
+    type: "suggestion" | "compliment" | "issue";
     updatedAt: boolean;
     createdAt: boolean;
 }
@@ -14,9 +15,14 @@ const FeedbackSchema: Schema = new Schema({
     userID: { type: String, required: true },
     stars: { type: Number, required: true, min: 0, max: 5 },
     description: { type: String, required: true },
+    type: {
+        type: String,
+        required: true,
+        enum: ["suggestion", "compliment", "issue"],
+      },
 },
     {
-        timestamps: true, // Adds createdAt and updatedAt fields automatically
+        timestamps: true, 
     }
 );
 

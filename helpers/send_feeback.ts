@@ -3,15 +3,17 @@ type FeedbackData = {
   userID: string;
   description: string;
   stars: number;
+  type: 'suggestion' | 'compliment' | 'issue';
 };
 
-export default async function sendFeedback({ email, userID, description, stars }: FeedbackData): Promise<any> {
+export default async function sendFeedback({ email, userID, description, stars, type }: FeedbackData): Promise<any> {
   const url = '/api/feedback';
   const data: FeedbackData = {
     email,
     userID,
     description,
-    stars
+    stars,
+    type
   };
 
   try {

@@ -20,10 +20,15 @@ module.exports = {
     extend: {
       colors: {
         'forest-green': '#1C463A',
+        'forest-green-dark': '#56B86F',
         'soft-beige': '#F8F6F1',
         'leaf-green': '#6FBF73',
         'warning-red': '#E57373',
         'neutral-gray': '#A8A8A8',
+        'light-green': '#CDE8D5',
+        'deep-mint': '#55A276',
+        'sky-leaf': '#A4D4AE',
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
