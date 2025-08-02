@@ -19,7 +19,7 @@ function Header() {
         { label: "About Us", href: "#about", homeOnly: true },
         { label: "Tutorial", href: "#tutorial", homeOnly: true },
         { label: "Contact", href: "#footer", homeOnly: false },
-        { label: "Community", href: "community", homeOnly: false },
+        { label: "Plantbook", href: "/plantbook", homeOnly: false },
     ]
 
     const navLinks = allNavLinks.filter(link => 
