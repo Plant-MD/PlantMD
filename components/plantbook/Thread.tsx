@@ -22,7 +22,7 @@ function timeAgo(date: string | Date) {
 
 export default function ThreadCard({ thread }: { thread: ThreadDB }) {
   return (
-    <div className="bg-white text-green-700 rounded-xl shadow-md p-4 flex gap-4 w-full max-w-3xl border border-gray-200">
+    <div className="bg-white text-green-700 rounded-xl shadow-md p-4 flex gap-4 w-full max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
       {/* Upvote Section */}
       <div className="flex flex-col items-center gap-2">
         <button className="hover:text-green-900">
