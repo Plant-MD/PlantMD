@@ -1,13 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Thread extends Document {
+    _id: string;
     title: string;
     vote: number;
     content: string;
     media: string[];
     category: string;
     children: string[];
-    parent: string | null;
+    parent?: string;
     author: string;
 
     updatedAt: boolean;
@@ -20,7 +21,7 @@ const ThreadSchema: Schema = new Schema({
     content: { type: String, required: true },
     media: { type: [String], required: true },
     category: { type: String, required: true },
-    children: { type: [String], required: true },
+    children: { type: [String], required: false, default: [] },
     parent: { type: String, required: false, default: null },
     author: { type: String, required: true },
 },
