@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface Thread extends Document {
+
+export interface ThreadDB {
     _id: string;
     title: string;
     vote: number;
@@ -11,8 +12,23 @@ export interface Thread extends Document {
     parent?: string;
     author: string;
 
-    updatedAt: boolean;
-    createdAt: boolean;
+    updatedAt: Date;
+    createdAt: Date;
+}
+
+export interface Thread extends Document {
+    _id: string;
+    title: string;
+    vote: number;
+    content: string;
+    media: string[];
+    category: string;
+    children: string[];
+    parent?: string;
+    author: string;
+    
+    updatedAt: Date;
+    createdAt: Date;
 }
 
 const ThreadSchema: Schema = new Schema({
