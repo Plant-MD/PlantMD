@@ -12,6 +12,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import CreatePostButton from "@/components/shared/CreatePostButton"
 
 export function NavMain({
   items,
@@ -30,6 +31,8 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupLabel></SidebarGroupLabel>
       <SidebarMenu>
+          <CreatePostButton />
+
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton tooltip={item.title}>

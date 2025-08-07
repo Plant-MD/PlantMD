@@ -1,8 +1,10 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { ThreadDB } from "@/models/Thread";
 import Image from "next/image";
 import { Share2, MessageCircle } from "lucide-react";
+import CommentsModal from "./CommentsModal";
 
 
 // Helper function to format time ago
@@ -21,6 +23,23 @@ function timeAgo(date: string | Date) {
 }
 
 export default function ThreadCard({ thread }: { thread: ThreadDB }) {
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+
+  const comments = [
+    {
+      id: "1",
+      author: "Alice",
+      text: "Great post!",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      author: "Bob",
+      text: "I agree with you.",
+      createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hour ago
+    },
+  ];
+
   return (
     <div className="bg-white text-green-700 rounded-xl shadow-md p-4 flex gap-4 w-full max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
       {/* Upvote Section */}
@@ -81,11 +100,22 @@ export default function ThreadCard({ thread }: { thread: ThreadDB }) {
             <Share2 size={16} />
             Share
           </button>
-          <button className="flex items-center gap-2 text-green-600 hover:text-green-800 border px-4 py-1 rounded-full font-roboto">
+          <button
+            className="flex items-center gap-2 text-green-600 hover:text-green-800 border px-4 py-1 rounded-full font-roboto"
+            onClick={() => setIsCommentsOpen(true)}
+          >
             <MessageCircle size={16} />
             Reply
           </button>
+
         </div>
+
+        <CommentsModal
+          isOpen={isCommentsOpen}
+          onClose={() => setIsCommentsOpen(false)}
+          comments={comments}
+        />
+
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import { Button } from "../ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Search from "../plantbook/Search";
+import CreatePostButton from '../shared/CreatePostButton'
+
 
 function Header() {
     const { data: session } = useSession();
@@ -44,6 +46,8 @@ function Header() {
                     </Link>
 
                     <Search />
+
+
                     <nav className="hidden md:flex items-center gap-6 text-lg font-medium">
 
                         {session ? (

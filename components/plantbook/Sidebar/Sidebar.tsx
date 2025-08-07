@@ -21,6 +21,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { url } from "inspector"
+import CreatePostButton from "@/components/shared/CreatePostButton"
 
 const data = {
   navMain: [
