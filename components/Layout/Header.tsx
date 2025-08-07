@@ -20,6 +20,7 @@ function Header() {
         { label: "Tutorial", href: "#tutorial", homeOnly: true },
         { label: "Contact", href: "#footer", homeOnly: false },
         { label: "Community", href: "community", homeOnly: false },
+        { label: "Plant Calendar", href: "#calendar", homeOnly: true },
     ]
 
     const navLinks = allNavLinks.filter(link => 

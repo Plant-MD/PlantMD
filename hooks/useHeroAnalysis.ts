@@ -5,7 +5,7 @@ import { useCamera } from '@/hooks/useCamera';
 import { useImageUpload } from '@/hooks/useImageUpload';
 
 export const useHeroAnalysis = () => {
-  const { data: session } = useSession();
+    const { data: session } = useSession();
   const router = useRouter();
   
   const [isProcessing, setIsProcessing] = useState(false);

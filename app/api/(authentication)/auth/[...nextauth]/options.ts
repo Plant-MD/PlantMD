@@ -15,9 +15,20 @@ export const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET
+            clientSecret: GOOGLE_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            }
         })
     ],
+    pages: {
+        signIn: '/',
+        error: '/',
+    },
     callbacks: {
         async signIn({ account, profile }) {
             await dbConnect();

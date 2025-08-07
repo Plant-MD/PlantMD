@@ -2,7 +2,33 @@
 
 ## New Features Added
 
-### 1. Enhanced Upload Popup Modal
+### 1. Plant Calendar Feature
+- **Location**: `components/PlantCalendar/PlantCalendar.tsx`
+- **Features**:
+  - **Beautiful Calendar Design**: Full-month calendar view with modern UI
+  - **Task Management**: Add, view, and complete plant care tasks
+  - **Task Types**: Watering, Fertilizing, Pruning, Repotting, Harvesting, and Other
+  - **Visual Task Indicators**: Color-coded task types with icons
+  - **Today Highlighting**: Current date is highlighted in green
+  - **Task Completion**: Click tasks to mark as complete/incomplete
+  - **Add Task Modal**: Beautiful dialog with form for adding new tasks
+  - **Upcoming Tasks Sidebar**: Shows next 5 upcoming tasks
+  - **Task Statistics**: Overview of total, completed, and pending tasks
+  - **Progress Bar**: Visual progress indicator for task completion
+  - **Responsive Design**: Works perfectly on mobile and desktop
+  - **Navigation Integration**: Added to header navigation
+  - **Sample Data**: Pre-populated with example tasks for demonstration
+  - **MongoDB Integration**: Tasks are stored in MongoDB database with full CRUD operations
+  - **API Backend**: Complete REST API for task management with proper error handling
+  - **Real-time Updates**: Tasks are automatically synced with the database
+  - **User Authentication**: Full NextAuth integration with Google OAuth
+  - **User-Specific Data**: Each user only sees and manages their own tasks
+  - **Security**: API endpoints require authentication and validate user ownership
+  - **Authentication UI**: Beautiful sign-in prompt for non-authenticated users
+  - **Hover Popup Details**: Hover over task icons to see detailed task information
+  - **Icon-Only Calendar View**: Clean calendar with only task icons for better visual clarity
+
+### 2. Enhanced Upload Popup Modal
 - **Location**: `components/Hero/components/UploadPopup.tsx`
 - **Features**:
   - **Responsive Design**: Fully responsive layout that works perfectly on mobile and desktop
@@ -53,6 +79,22 @@
 
 ## Technical Details
 
+### Plant Calendar Features
+- **Calendar Grid**: 7-column grid layout with proper day alignment
+- **Task Display**: Shows task icons only for clean visual design
+- **Task Types**: 6 different task categories with unique colors and icons
+- **State Management**: Custom useTasks hook with MongoDB integration and authentication
+- **Date Handling**: Proper date formatting and comparison logic
+- **Responsive Layout**: 3-column grid on desktop, stacked on mobile
+- **Modal Integration**: Uses shadcn/ui Dialog component for add task form
+- **Form Validation**: Basic validation for required fields
+- **Database Integration**: MongoDB with Mongoose ODM and proper indexing
+- **API Layer**: Complete REST API with CRUD operations, authentication, and user validation
+- **Authentication**: NextAuth integration with Google OAuth and session management
+- **Security**: User ownership validation for all task operations
+- **Hover Popups**: Detailed task information displayed on hover using Popover component
+- **Loading States**: Proper loading indicators and error handling with toast notifications
+
 ### Popup Modal Features
 - **File Upload**: File explorer integration with automatic popup trigger
 - **Image Preview**: Centered image display with remove option
@@ -89,6 +131,15 @@ Currently supported:
 
 ## Usage
 
+### Plant Calendar
+1. **Navigate to Calendar**: Click "Plant Calendar" in the header navigation
+2. **View Calendar**: See the current month with existing tasks
+3. **Add New Task**: Click "Add Task" button in the calendar header
+4. **Fill Task Details**: Enter title, description, date, and select task type
+5. **Complete Tasks**: Click on any task in the calendar or sidebar to mark as complete
+6. **View Statistics**: Check the task overview sidebar for completion progress
+
+### Plant Analysis
 1. **Open Popup**: Click the "Browse Files" button in the hero section
 2. **Upload Image**: Click "Browse Files" in the popup to select an image
 3. **Wait for Processing**: Progress bar and rendering animation complete
