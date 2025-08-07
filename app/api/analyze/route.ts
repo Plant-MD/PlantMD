@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const externalFormData = new FormData();
     externalFormData.append('file', file);
 
-    const apiUrl = new URL('https://api.plantmd.xyz/predict');
+    const apiUrl = new URL('https://mandipsapkota-plantmd-pipeline.hf.space/predict');
     apiUrl.searchParams.append('plant', plant);
 
     console.log('Sending request to external API URL:', apiUrl.toString());
