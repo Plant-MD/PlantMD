@@ -57,7 +57,6 @@ export async function GET(request: NextRequest) {
           );
         }
         
-        // Wait before retry (exponential backoff)
         await new Promise(resolve => setTimeout(resolve, 1000 * connectionAttempts));
       }
     }
