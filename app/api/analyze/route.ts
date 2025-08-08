@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const externalFormData = new FormData();
     externalFormData.append('file', file);
 
-    const apiUrl = new URL('https://api.plantmd.xyz/predict');
+    const apiUrl = new URL('https://mandipsapkota-plantmd-pipeline.hf.space/predict');
     apiUrl.searchParams.append('plant', plant);
 
     console.log('Sending request to external API URL:', apiUrl.toString());
@@ -102,10 +102,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Successfully processed analysis, returning predictions');
+    // Validate and clean prediction data
+    const validPredictions = data.predictions
+      .filter((prediction: any) => {
+        // Check if prediction has valid structure
+        return prediction && 
+               typeof prediction === 'object' &&
+               'class' in prediction &&
+               'confidence' in prediction &&
+               typeof prediction.class === 'string' &&
+               typeof prediction.confidence === 'number' &&
+               prediction.class.trim().length > 0 &&
+               prediction.confidence >= 0 &&
+               prediction.confidence <= 1;
+      })
+      .map((prediction: any) => ({
+        class: prediction.class.trim(),
+        confidence: Math.min(Math.max(prediction.confidence, 0), 1) // Ensure confidence is between 0 and 1
+      }))
+      .slice(0, 3); // Limit to top 3 predictions
+
+    if (validPredictions.length === 0) {
+      console.error('No valid predictions found in external API response:', data.predictions);
+      return NextResponse.json(
+        { error: 'No valid disease predictions could be generated for this image. Please try a different image.' },
+        { status: 502 }
+      );
+    }
+
+    console.log('Successfully processed analysis, returning', validPredictions.length, 'valid predictions');
     return NextResponse.json({
       success: true,
-      predictions: data.predictions,
+      predictions: validPredictions,
       plant: plant,
       message: `${plant.charAt(0).toUpperCase() + plant.slice(1)} analysis completed successfully`
     });

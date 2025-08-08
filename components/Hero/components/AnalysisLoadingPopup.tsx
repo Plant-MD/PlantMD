@@ -7,16 +7,24 @@ import { Card } from '@/components/ui/card';
 interface AnalysisLoadingPopupProps {
   isOpen: boolean;
   plantType: 'tomato' | 'corn';
+  progress?: number;
+  currentStep?: string;
   onClose: () => void;
 }
 
 const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
   isOpen,
   plantType,
+  progress: externalProgress,
+  currentStep: externalCurrentStep,
   onClose
 }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [internalCurrentStep, setInternalCurrentStep] = useState(0);
+  const [internalProgress, setInternalProgress] = useState(0);
+
+  // Use external progress and step if provided, otherwise use internal
+  const progress = externalProgress !== undefined ? externalProgress : internalProgress;
+  const currentStepText = externalCurrentStep || '';
 
   const analysisSteps = [
     {
@@ -42,39 +50,42 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    // Reset states when popup opens
-    setCurrentStep(0);
-    setProgress(0);
+    // Only use internal animation if external progress is not provided
+    if (externalProgress === undefined) {
+      // Reset states when popup opens
+      setInternalCurrentStep(0);
+      setInternalProgress(0);
 
-    // Calculate timing for smooth animation
-    const totalDuration = 8000; // 8 seconds total
-    const stepDuration = totalDuration / analysisSteps.length; // 2 seconds per step
-    const progressInterval = 50; // Update progress every 50ms
-    const progressIncrement = (100 / (totalDuration / progressInterval)); // Calculate increment per update
+      // Calculate timing for smooth animation
+      const totalDuration = 8000; // 8 seconds total
+      const stepDuration = totalDuration / analysisSteps.length; // 2 seconds per step
+      const progressInterval = 50; // Update progress every 50ms
+      const progressIncrement = (100 / (totalDuration / progressInterval)); // Calculate increment per update
 
-    const stepInterval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev < analysisSteps.length - 1) {
-          return prev + 1;
-        }
-        return prev;
-      });
-    }, stepDuration);
+      const stepInterval = setInterval(() => {
+        setInternalCurrentStep((prev) => {
+          if (prev < analysisSteps.length - 1) {
+            return prev + 1;
+          }
+          return prev;
+        });
+      }, stepDuration);
 
-    const progressIntervalId = setInterval(() => {
-      setProgress((prev) => {
-        if (prev < 100) {
-          return Math.min(prev + progressIncrement, 100);
-        }
-        return prev;
-      });
-    }, progressInterval);
+      const progressIntervalId = setInterval(() => {
+        setInternalProgress((prev) => {
+          if (prev < 100) {
+            return Math.min(prev + progressIncrement, 100);
+          }
+          return prev;
+        });
+      }, progressInterval);
 
-    return () => {
-      clearInterval(stepInterval);
-      clearInterval(progressIntervalId);
-    };
-  }, [isOpen, analysisSteps.length]);
+      return () => {
+        clearInterval(stepInterval);
+        clearInterval(progressIntervalId);
+      };
+    }
+  }, [isOpen, analysisSteps.length, externalProgress]);
 
   if (!isOpen) return null;
 
@@ -102,7 +113,7 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
                 Analyzing Your {plantType.charAt(0).toUpperCase() + plantType.slice(1)}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg">
-                Our AI is examining your plant image for diseases and health issues
+                {currentStepText || "Our AI is examining your plant image for diseases and health issues"}
               </p>
             </div>
 
@@ -126,41 +137,47 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
 
             {/* Analysis Steps */}
             <div className="space-y-4">
-              {analysisSteps.map((step, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center space-x-4 p-4 rounded-2xl transition-all duration-500 ${
-                    index <= currentStep
-                      ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200'
-                      : 'bg-gray-50 border border-gray-200'
-                  }`}
-                >
-                  <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                    index <= currentStep
-                      ? 'bg-green-100 text-green-600'
-                      : 'bg-gray-100 text-gray-400'
-                  }`}>
-                    {step.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className={`font-semibold text-lg ${
-                      index <= currentStep ? step.color : 'text-gray-400'
+              {analysisSteps.map((step, index) => {
+                const currentStep = externalProgress !== undefined 
+                  ? Math.floor((progress / 100) * analysisSteps.length)
+                  : internalCurrentStep;
+                
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-4 p-4 rounded-2xl transition-all duration-500 ${
+                      index <= currentStep
+                        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200'
+                        : 'bg-gray-50 border border-gray-200'
+                    }`}
+                  >
+                    <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
+                      index <= currentStep
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-gray-100 text-gray-400'
                     }`}>
-                      {step.title}
-                    </h3>
-                    <p className={`text-sm ${
-                      index <= currentStep ? 'text-gray-600' : 'text-gray-400'
-                    }`}>
-                      {step.description}
-                    </p>
-                  </div>
-                  {index <= currentStep && (
-                    <div className="flex-shrink-0">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                      {step.icon}
                     </div>
-                  )}
-                </div>
-              ))}
+                    <div className="flex-1">
+                      <h3 className={`font-semibold text-lg ${
+                        index <= currentStep ? step.color : 'text-gray-400'
+                      }`}>
+                        {step.title}
+                      </h3>
+                      <p className={`text-sm ${
+                        index <= currentStep ? 'text-gray-600' : 'text-gray-400'
+                      }`}>
+                        {step.description}
+                      </p>
+                    </div>
+                    {index <= currentStep && (
+                      <div className="flex-shrink-0">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Bottom Info */}

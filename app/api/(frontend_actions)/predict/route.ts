@@ -7,8 +7,6 @@ import DiseaseModel from "@/models/Disease";
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
-
     const { searchParams } = new URL(request.url);
     const diseaseName = searchParams.get("disease_name");
     const confidence = searchParams.get("confidence");
@@ -22,33 +20,46 @@ export async function GET(request: NextRequest) {
 
     console.log("Searching for disease:", diseaseName);
 
-    // Check if database is connected before querying
-    const mongoose = require('mongoose');
-    if (mongoose.connection.readyState !== 1) {
-      console.log("Database not connected, returning fallback data");
-      // Return fallback data structure
-      const perc = confidence ? Number(confidence) * 100 : 0;
-      return NextResponse.json({
-        success: true,
-        disease: {
-          _id: 'fallback-id',
-          disease_code: 'N/A',
-          disease_name: diseaseName.replace(/_/g, ' '),
-          scientific_name: 'Unknown',
-          common_plants: ['Unknown'],
-          category: 'Unknown',
-          risk_factor: 'Unknown'
-        },
-        cure: {
-          _id: 'fallback-cure-id',
-          disease_id: 'fallback-id',
-          disease: diseaseName.replace(/_/g, ' '),
-          cure: ['Treatment information not available'],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        confidence: perc
-      }, { status: 200 });
+    // Connect to database with retry logic
+    let connectionAttempts = 0;
+    const maxAttempts = 2;
+    
+    while (connectionAttempts < maxAttempts) {
+      try {
+        await dbConnect();
+        break; // Connection successful, exit retry loop
+      } catch (error: any) {
+        connectionAttempts++;
+        console.error(`Database connection attempt ${connectionAttempts} failed:`, error.message);
+        
+        if (connectionAttempts >= maxAttempts) {
+          // Determine appropriate error message based on error type
+          let errorMessage = "Database temporarily unavailable";
+          let statusCode = 503;
+          
+          if (error.message?.includes('timeout')) {
+            errorMessage = "Database connection timeout - please try again";
+          } else if (error.message?.includes('not found')) {
+            errorMessage = "Database configuration error";
+            statusCode = 500;
+          } else if (error.message?.includes('authentication') || error.message?.includes('authorization')) {
+            errorMessage = "Database access error";
+            statusCode = 500;
+          }
+          
+          return NextResponse.json(
+            { 
+              success: false, 
+              message: errorMessage,
+              details: "The database is currently unavailable. Please try again later."
+            },
+            { status: statusCode }
+          );
+        }
+        
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * connectionAttempts));
+      }
     }
 
     // Search Disease collection by disease_name
@@ -73,7 +84,6 @@ export async function GET(request: NextRequest) {
       { success: true, disease, cure, confidence: perc},
       { status: 200 }
     );
-
   } catch (error) {
     console.error("Error fetching disease and cure:", error);
     return NextResponse.json(
