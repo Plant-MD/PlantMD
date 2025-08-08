@@ -18,31 +18,7 @@ const ResponsiveImagePreview: React.FC<ResponsiveImagePreviewProps> = ({
   onClearImage,
   onAnalyze
 }) => {
-<<<<<<< HEAD
-  console.log('ImagePreview render:', {
-    hasImage: !!selectedImage,
-    imageLength: selectedImage?.length,
-    isProcessing
-  });
-  return (
-    <div className="space-y-4 sm:space-y-8">
-      <div className="relative group">
-        <img
-          src={selectedImage}
-          alt="Selected plant"
-          className="w-full max-h-64 sm:max-h-96 object-contain rounded-xl sm:rounded-2xl shadow-lg"
-        />
-        {onClearImage && (
-          <button
-            onClick={onClearImage}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 sm:p-3 bg-red-500/90 backdrop-blur-sm text-white rounded-full hover:bg-red-600 transition-all duration-200 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 touch-manipulation"
-          >
-            <X className="h-4 w-4 sm:h-5 sm:w-5" />
-          </button>
-        )}
-=======
   const [imageLoaded, setImageLoaded] = useState(false);
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
 
   const PlantIcon = selectedPlant === 'tomato' ? Leaf : Wheat;
 

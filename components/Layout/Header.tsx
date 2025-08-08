@@ -22,7 +22,6 @@ function Header() {
 
         { label: "Community", href: "community", homeOnly: false },
         { label: "Plant Calendar", href: "#calendar", homeOnly: true },
-=======
         { label: "Plantbook", href: "/plantbook", homeOnly: false },
 
     ]
@@ -69,16 +68,6 @@ function Header() {
                                 <span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-green-500 transition-all duration-300 group-hover:w-full" />
                             </Link>
                         ))}
-<<<<<<< HEAD
-                        <Link
-                            href="#"
-                            className="relative bg-gray-100 border-2 border-gray-300 text-gray-500 px-4 lg:px-6 py-1 cursor-not-allowed opacity-60 font-roboto overflow-hidden group"
-                            onClick={(e) => e.preventDefault()}
-                        >
-                            <span className="relative z-10">Coming Soon</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 animate-flare"></div>
-                        </Link>
-=======
                         
                         {session && (
                             <Link
@@ -88,7 +77,6 @@ function Header() {
                                 Give Feedback
                             </Link>
                         )}
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
 
                         {session ? (
                             <Button
@@ -137,20 +125,6 @@ function Header() {
                             </Link>
                         ))}
 
-<<<<<<< HEAD
-                        {/* Mobile Use App Button */}
-                        <Link
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                closeMenu()
-                            }}
-                            className="block mx-4 bg-gray-100 text-gray-500 px-4 py-2 rounded-md cursor-not-allowed opacity-60 font-roboto text-center relative overflow-hidden group"
-                        >
-                            <span className="relative z-10">Coming Soon</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 animate-flare"></div>
-                        </Link>
-=======
                         {session && (
                             <Link
                                 href="/feedback"
@@ -170,7 +144,6 @@ function Header() {
                                 Use App
                             </Link>
                         )}
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
 
                         <div className="px-4">
                             {session ? (

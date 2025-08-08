@@ -4,7 +4,7 @@ import { Inter } from "next/font/google"
 import Footer from "@/components/Layout/Footer"
 import Header from "@/components/Layout/Header"
 import Providers from "@/components/plantbook/Providers"
-import "/home/dawg/projects/PlantMD-Main/app/(app)/globals.css"
+import "@/app/(app)/globals.css"
 import { AppSidebar } from "@/components/plantbook/Sidebar/Sidebar"
 import { Roboto, Lato, Oswald } from "next/font/google";
 

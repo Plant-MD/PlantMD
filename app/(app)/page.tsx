@@ -18,14 +18,6 @@ export default function PlantMDLanding() {
         <PlantCalendar />
       </div>
 
-      {/* About Section */}
-      <div id="about">
-
-        <About />
-      </div>
-=======
-
-
       <About />
 
       <TeamSection />
