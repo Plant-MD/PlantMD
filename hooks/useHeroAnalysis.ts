@@ -144,7 +144,7 @@ export const useHeroAnalysis = () => {
     handlePlantChange,
     handleDismissError,
   };
-=======
+
     const router = useRouter();
 
     const [isProcessing, setIsProcessing] = useState(false);
