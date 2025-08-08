@@ -3,27 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   console.log('🌐 [API] POST request received to /api/analyze');
   try {
-<<<<<<< HEAD
-    console.log('📦 [API] Parsing FormData...');
-=======
     console.log('Analyze API route called');
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const plant = formData.get('plant') as string;
 
-<<<<<<< HEAD
-    console.log('📋 [API] Request details - Plant category:', plant, 'File type:', file?.type, 'File size:', file?.size);
-
-    if (!file) {
-      console.log('❌ [API] No file provided in request');
-=======
     console.log('Received request with plant type:', plant);
     console.log('File received:', file ? { name: file.name, size: file.size, type: file.type } : 'No file');
 
     if (!file) {
       console.error('No file provided in request');
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
       return NextResponse.json(
         { error: 'No file provided' },
         { status: 400 }
@@ -39,11 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!file.type.startsWith('image/')) {
-<<<<<<< HEAD
-      console.log('❌ [API] Invalid file type:', file.type);
-=======
       console.error('Invalid file type:', file.type);
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
       return NextResponse.json(
         { error: 'Invalid file type. Please upload an image.' },
         { status: 400 }
@@ -52,11 +37,7 @@ export async function POST(request: NextRequest) {
 
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-<<<<<<< HEAD
-      console.log('❌ [API] File too large:', file.size, 'bytes');
-=======
       console.error('File too large:', file.size);
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
       return NextResponse.json(
         { error: 'File too large. Maximum size is 10MB.' },
         { status: 400 }
@@ -70,7 +51,7 @@ export async function POST(request: NextRequest) {
     externalFormData.append('file', file);
     // Note: plant parameter will be added as query parameter, not in FormData
 
-<<<<<<< HEAD
+
     // Log what we're sending
     console.log('📤 [API] FormData contents:');
     console.log('  file:', file.name, file.type, file.size, 'bytes');
@@ -155,8 +136,8 @@ export async function POST(request: NextRequest) {
       throw fetchError; // Re-throw to be caught by outer catch block
     }
 
-=======
-    const apiUrl = new URL('https://api.plantmd.xyz/predict');
+
+    const apiUrl = new URL('https://mandipsapkota-plantmd-pipeline.hf.space/predict');
     apiUrl.searchParams.append('plant', plant);
 
     console.log('Sending request to external API URL:', apiUrl.toString());
@@ -220,7 +201,6 @@ export async function POST(request: NextRequest) {
       message: `${plant.charAt(0).toUpperCase() + plant.slice(1)} analysis completed successfully`
     });
 
->>>>>>> 95b30fb1578ab2214345ca531e6edd7792f94137
   } catch (error) {
     console.error('💥 [API] API route error:', error);
 

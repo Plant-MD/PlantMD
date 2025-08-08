@@ -54,6 +54,7 @@ const Quick_Links = [
   { href: "", text: "Contact Us" },
   { href: "", text: "About Our Team" },
   { href: "", text: "Incubate Nepal 2025" },
+  { href: "/privacy", text: "Privacy Policy" },
 ];
 const Notices = [
   { href: "", text: "General News" },
