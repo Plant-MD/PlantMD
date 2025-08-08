@@ -2,17 +2,19 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { Upload, Hash, X, ImageIcon } from "lucide-react";
+import { useSession } from "next-auth/react"; // ✅ NextAuth import
 
 type CreatePostModalProps = {
   onClose: () => void;
 };
 
 export default function CreatePostModal({ onClose }: CreatePostModalProps) {
+  const { data: session } = useSession(); // ✅ Grab session data
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /** Close modal with ESC key */
@@ -45,14 +47,54 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handlePost = () => {
-    console.log({
-      title,
-      description,
-      image: uploadedImage,
-      tags,
-    });
-    onClose();
+  /** POST to API with session user as author */
+  const handlePost = async () => {
+    if (!session?.user?._id) {
+      alert("You must be logged in to create a post");
+      return;
+    }
+
+    try {
+      const body = {
+        title: title.trim(),
+        vote: 0,
+        content: description.trim(),
+        media: uploadedImage
+          ? [
+              {
+                base64: uploadedImage,
+                contentType:
+                  uploadedImage.match(/^data:(.*);base64/)?.[1] || "image/png",
+              },
+            ]
+          : [],
+        category: "general", // Can be replaced with dropdown
+        children: [],
+        parent: null,
+        author: session.user.username, // ✅ from NextAuth session
+      };
+
+      const res = await fetch("/api/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log("Thread created:", data);
+        onClose();
+      } else {
+        console.error("Error creating thread:", data.message);
+        alert(data.message || "Failed to create post");
+      }
+    } catch (err) {
+      console.error("Request failed", err);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -60,13 +102,10 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
       style={{ backdropFilter: "blur(4px)" }}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
-
-      {/* Modal content */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 flex flex-col w-full max-w-2xl h-[70vh] mx-auto bg-white rounded-xl shadow-2xl transform transition-all duration-200 ease-out"
+        className="relative z-10 flex flex-col w-full max-w-2xl h-[70vh] mx-auto bg-white rounded-xl shadow-2xl"
       >
         <ModalHeader onClose={onClose} />
         <ModalContent
@@ -83,12 +122,13 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
         <ModalFooter
           onCancel={onClose}
           onPost={handlePost}
-          disabled={!title.trim()}
+          disabled={!title.trim() || !description.trim()}
         />
       </div>
     </div>
   );
 }
+
 
 function ModalHeader({ onClose }: { onClose: () => void }) {
   return (
