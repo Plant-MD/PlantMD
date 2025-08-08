@@ -22,7 +22,6 @@ function Header() {
 
         { label: "Community", href: "community", homeOnly: false },
         { label: "Plant Calendar", href: "#calendar", homeOnly: true },
-=======
         { label: "Plantbook", href: "/plantbook", homeOnly: false },
 
     ]
