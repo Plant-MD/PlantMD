@@ -19,7 +19,7 @@ function Header() {
         { label: "About Us", href: "#about", homeOnly: true },
         { label: "Tutorial", href: "#tutorial", homeOnly: true },
         { label: "Contact", href: "#footer", homeOnly: false },
-        { label: "Community", href: "community", homeOnly: false },
+        { label: "Plantbook", href: "/plantbook", homeOnly: false },
     ]
 
     const navLinks = allNavLinks.filter(link => 
@@ -35,7 +35,7 @@ function Header() {
     }
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-sage/20 py-2">
+        <nav className="sticky top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-sage/20 py-2">
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
                 <div className="flex justify-between items-center h-14 sm:h-16">
                     <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group justify-around">
