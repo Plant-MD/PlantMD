@@ -26,12 +26,6 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
       color: "text-blue-600"
     },
     {
-      icon: <Brain className="w-6 h-6" />,
-      title: "AI Processing",
-      description: "Running disease detection algorithms",
-      color: "text-purple-600"
-    },
-    {
       icon: <Leaf className="w-6 h-6" />,
       title: "Plant Classification",
       description: `Identifying ${plantType} specific diseases`,
@@ -172,7 +166,6 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
             {/* Bottom Info */}
             <div className="mt-8 text-center">
               <div className="inline-flex items-center space-x-2 text-sm text-gray-500">
-                <Zap className="w-4 h-4 text-yellow-500" />
                 <span>This may take a few moments...</span>
               </div>
             </div>

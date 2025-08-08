@@ -4,75 +4,22 @@ import Image from "next/image";
 
 export default function VideoSection() {
   return (
-    <section className="relative px-4 sm:px-6 py-16 bg-[#f9fef9] overflow-hidden md:min-h-screen">
-      <div className="max-w-4xl m-auto relative z-10 mt-20">
-
-        {/* Corner Frames with parallel venation texture */}
-        {/* TOP LEFT */}
-        <CornerFrame position="top-left" />
-        {/* TOP RIGHT */}
-        <CornerFrame position="top-right" />
-        {/* BOTTOM LEFT */}
-        <CornerFrame position="bottom-left" />
-        {/* BOTTOM RIGHT */}
-        <CornerFrame position="bottom-right" />
+    <section className="relative mb-5 bg-green-50 overflow-hidden md:min-h-screen lg:mt-10">
+      <div className="max-w-4xl m-auto relative z-10 mt-5 md:mt-20">
 
         {/* Video Container */}
-        <div className="relative z-10 overflow-hidden rounded-2xl sm:rounded-3xl aspect-video shadow-2xl border-4 border-white">
+        <div className="relative z-10 overflow-hidden sm:rounded-none aspect-video shadow-2xl">
           <iframe
             className="w-full h-full"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1"
             title="YouTube video"
             frameBorder="0"
-            allow="autoplay; encrypted-media"
+            allow="encrypted-media"
             allowFullScreen
+            loading="lazy"
           />
         </div>
       </div>
     </section>
-  );
-}
-
-// Custom Component for Framed Corners
-type CornerPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
-
-interface CornerFrameProps {
-  position: CornerPosition;
-}
-
-function CornerFrame({ position }: CornerFrameProps) {
-  const baseClass = "absolute z-20 pointer-events-none";
-  const frameStyle = "bg-green-700 bg-[url('/textures/parallel-veins.svg')] bg-[length:100%_100%]";
-
-  const positions: Record<CornerPosition, { container: string; horiz: string; vert: string }> = {
-    "top-left": {
-      container: "-top-12 -left-12",
-      horiz: "w-28 h-6 rounded",
-      vert: "w-6 h-28 absolute top-0 left-0 rounded",
-    },
-    "top-right": {
-      container: "-top-12 -right-12",
-      horiz: "w-28 h-6 rounded",
-      vert: "w-6 h-28 absolute top-0 right-0 rounded",
-    },
-    "bottom-left": {
-      container: "-bottom-12 -left-12",
-      horiz: "w-28 h-6 absolute bottom-0 left-0 rounded",
-      vert: "w-6 h-28 absolute bottom-0 left-0 rounded",
-    },
-    "bottom-right": {
-      container: "-bottom-12 -right-12",
-      horiz: "w-28 h-6 absolute bottom-0 right-0 rounded",
-      vert: "w-6 h-28 absolute bottom-0 right-0 rounded",
-    },
-  };
-
-  const pos = positions[position];
-
-  return (
-    <div className={`${baseClass} ${pos.container}`}>
-      <div className={`${frameStyle} ${pos.horiz}`} />
-      <div className={`${frameStyle} ${pos.vert}`} />
-    </div>
   );
 }

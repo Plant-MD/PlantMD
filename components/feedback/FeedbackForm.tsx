@@ -6,16 +6,16 @@ import { Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { 
-  validateFeedbackForm, 
+import {
+  validateFeedbackForm,
   submitFeedback,
-  FeedbackErrors 
+  FeedbackErrors
 } from '@/types/feedback';
-import { 
-  FeedbackTypeSelector, 
-  StarRating, 
-  FeedbackTextarea, 
-  SuccessScreen 
+import {
+  FeedbackTypeSelector,
+  StarRating,
+  FeedbackTextarea,
+  SuccessScreen
 } from './FormComponents';
 
 interface FeedbackFormProps {
@@ -25,7 +25,7 @@ interface FeedbackFormProps {
 
 export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
   const router = useRouter();
-  
+
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [selectedType, setSelectedType] = useState<string>('');
@@ -56,17 +56,17 @@ export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
-    
+
     const formData = { rating, feedback, selectedType };
     const validation = validateFeedbackForm(formData);
-    
+
     if (!validation.isValid) {
       setErrors(validation.errors);
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       await submitFeedback({
         email: userEmail,
@@ -75,9 +75,9 @@ export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
         description: feedback.trim(),
         type: selectedType,
       });
-      
+
       setIsSubmitted(true);
-      
+
       setTimeout(() => {
         setIsSubmitted(false);
         setRating(0);
@@ -85,7 +85,7 @@ export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
         setSelectedType('');
         setErrors({});
       }, 5000);
-      
+
     } catch (error: any) {
       setSubmitError(error.message);
     } finally {
@@ -98,7 +98,7 @@ export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
   }
 
   return (
-    <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+    <Card className="border-none bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 backdrop-blur-sm">
       <CardContent className="p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
           <FeedbackTypeSelector
@@ -118,15 +118,17 @@ export default function FeedbackForm({ userEmail, userId }: FeedbackFormProps) {
             onChange={handleFeedbackChange}
             error={errors.feedback}
           />
+
           {submitError && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{submitError}</p>
+            <div className="p-4 bg-warning-red/10 border border-warning-red/30 rounded-lg">
+              <p className="text-sm text-warning-red">{submitError}</p>
             </div>
           )}
-          <Button 
-            type="submit" 
+
+          <Button
+            type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:opacity-50"
+            className="w-full h-12 text-base font-semibold bg-deep-mint text-white hover:bg-deep-mint shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:opacity-50"
           >
             {isSubmitting ? (
               <div className="flex items-center space-x-2">

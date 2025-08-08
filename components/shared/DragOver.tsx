@@ -47,19 +47,20 @@ function DragOverComponent({
 
   return (
     <div
-      className={`group relative mx-auto max-w-md transition-all duration-300 ${
-        isDragOver ? "scale-105" : "hover:scale-102"
-      } ${className}`}
+      className={`group mx-auto max-w-md transition-all duration-300 ${isDragOver ? "scale-105" : "hover:scale-102"
+        } ${className}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       <div
-        className={`
-          relative rounded-2xl border-[2px]  bg-white/95 p-8 md:px-[100px] shadow-lg backdrop-blur-sm transition-all duration-300
-          ${isDragOver ? "border-green-400 bg-green-50/50 shadow-xl" : "border-green-300 hover:border-green-400 hover:shadow-xl"}
-        `}
+        className={`relative rounded-2xl border-[2px] border-mint bg-white/95 p-8 md:px-[100px] shadow-lg backdrop-blur-sm transition-all duration-300
+    ${isDragOver
+            ? "border-mint bg-green-50/50 shadow-xl"
+            : "border-forest-green hover:border-mint hover:shadow-xl"}
+       `}
       >
+
         {/* Upload Icon and Text */}
         <div className="mb-6 text-center">
           <h3 className="mb-2 text-xl font-extrabold text-gray-900 ">{isDragOver ? "Drop Your Image" : title}</h3>
@@ -71,12 +72,10 @@ function DragOverComponent({
           <Button
             variant="outline"
             size="lg"
-            className="rounded-xl border-2 border-green-300 py-3 font-semibold text-green-700 hover:border-green-500 hover:bg-green-50 hover:text-green-800 transition-all duration-300"
-            onClick={() => {
-              // Trigger camera input (not implemented in browsers, but included for completeness)
-              alert("Camera functionality requires native app support.");
-            }}
+            className="rounded-xl border-2  py-3 font-semibold text-forest border-leaf-green hover:border-mint  transition-all duration-300"
+            onClick={() => alert("Camera functionality requires native app support.")}
           >
+
             <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"

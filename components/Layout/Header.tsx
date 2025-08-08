@@ -19,8 +19,12 @@ function Header() {
         { label: "About Us", href: "#about", homeOnly: true },
         { label: "Tutorial", href: "#tutorial", homeOnly: true },
         { label: "Contact", href: "#footer", homeOnly: false },
+
         { label: "Community", href: "community", homeOnly: false },
         { label: "Plant Calendar", href: "#calendar", homeOnly: true },
+=======
+        { label: "Plantbook", href: "/plantbook", homeOnly: false },
+
     ]
 
     const navLinks = allNavLinks.filter(link => 
@@ -78,7 +82,7 @@ function Header() {
                         {session ? (
                             <Button
                                 onClick={() => signOut()}
-                                className="bg-plant-dark hover:bg-gray-800 text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
+                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
                             >
                                 <LogOut className="h-4 w-4 mr-2" />
                                 Sign Out
@@ -86,7 +90,7 @@ function Header() {
                         ) : (
                             <Button
                                 onClick={() => signIn('google')}
-                                className="bg-plant-dark hover:bg-gray-800 text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
+                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
                             >
                                 <LogIn className="h-4 w-4 mr-2" />
                                 Sign In
@@ -126,7 +130,7 @@ function Header() {
                             <Link
                                 href="/feedback"
                                 onClick={closeMenu}
-                                className="block mx-4 bg-white border-2 border-green-600 text-green-700 px-4 py-2 rounded-md transition-colors font-roboto text-center"
+                                className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center"
                             >
                                 Give Feedback
                             </Link>

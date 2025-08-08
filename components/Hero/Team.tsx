@@ -2,20 +2,22 @@ import React from "react";
 
 export default function TeamSection() {
   return (
-    <div className="relative h-screen overflow-hidden">
-      {/* Background Image */}
+    <div className="relative w-full overflow-hidden" id="team">
+      {/* Background Image that scales and fits */}
       <img
         src="/contact.png"
         alt="Background"
-        className="absolute top-0 left-0 w-full h-full object-cover"
+        className="w-full object-contain"
       />
 
-      {/* Transparent Image on Top */}
-      <img
-        src="/credits.png"
-        alt="Transparent Overlay"
-        className="absolute top-0 left-0 w-full h-full object-contain pointer-events-none"
-      />
+      {/* Overlay positioned absolutely but scaling with image */}
+      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+        <img
+          src="/credits.png"
+          alt="Transparent Overlay"
+          className="w-full h-full object-contain"
+        />
+      </div>
     </div>
   );
 }

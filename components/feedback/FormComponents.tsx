@@ -20,7 +20,7 @@ interface FeedbackTypeSelectorProps {
 export function FeedbackTypeSelector({ selectedType, onTypeSelect, error }: FeedbackTypeSelectorProps) {
   return (
     <div className="space-y-3">
-      <Label className="text-base font-semibold text-gray-900">What type of feedback is this?</Label>
+      <Label className="text-base  font-roboto text-gray-900">What type of feedback is this?</Label>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {feedbackTypes.map((type) => (
           <button
@@ -28,7 +28,7 @@ export function FeedbackTypeSelector({ selectedType, onTypeSelect, error }: Feed
             type="button"
             onClick={() => onTypeSelect(type.id)}
             className={`
-              p-4 rounded-lg border-2 transition-all duration-200 text-sm font-medium
+              p-4 rounded-lg border-2 transition-all duration-200 text-sm font-roboto
               flex items-center justify-center space-x-2 hover:scale-105 hover:shadow-md
               ${selectedType === type.id 
                 ? `${type.color} border-current shadow-md` 
@@ -66,7 +66,7 @@ export function StarRating({
 
   return (
     <div className="space-y-3">
-      <Label className="text-base font-semibold text-gray-900">
+      <Label className="text-base font-roboto text-gray-900">
         How would you rate your experience?
       </Label>
 
@@ -124,7 +124,7 @@ interface FeedbackTextareaProps {
 export function FeedbackTextarea({ value, onChange, error }: FeedbackTextareaProps) {
   return (
     <div className="space-y-3">
-      <Label htmlFor="feedback" className="text-base font-semibold text-gray-900">
+      <Label htmlFor="feedback" className="text-base font-roboto text-gray-900">
         Tell us more about your experience
       </Label>
       <div className="relative">
@@ -133,7 +133,7 @@ export function FeedbackTextarea({ value, onChange, error }: FeedbackTextareaPro
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="What did you like? What could we improve? Any specific features you'd love to see?"
-          className={`min-h-[120px] resize-none text-base leading-relaxed transition-all duration-200 ${
+          className={`min-h-[120px] resize-none text-base leading-relaxed transition-all duration-200 font-roboto${
             error ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : ''
           }`}
           maxLength={500}
