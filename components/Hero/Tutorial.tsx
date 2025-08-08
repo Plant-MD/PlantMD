@@ -4,11 +4,11 @@ import Image from "next/image";
 
 export default function VideoSection() {
   return (
-    <section className="relative mb-5 bg-green-50 overflow-hidden md:min-h-screen lg:mt-10">
-      <div className="max-w-4xl m-auto relative z-10 mt-5 md:mt-20">
+    <section className="bg-green-50 overflow-hidden md:min-h-screen">
+      <div className="max-w-5xl rounded-md m-auto relative z-10 my-5 md:my-20">
 
         {/* Video Container */}
-        <div className="relative z-10 overflow-hidden sm:rounded-none aspect-video shadow-2xl">
+        <div className="relative z-10 overflow-hidden rounded-xl aspect-video shadow-md">
           <iframe
             className="w-full h-full"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1"

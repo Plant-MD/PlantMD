@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { X, Upload, Camera, Sparkles, Leaf } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Upload, Sparkles, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,7 @@ interface UploadPopupProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onAnalyze: (imageData: string, plantType: 'tomato' | 'corn') => void;
+	onBrowseFiles: () => void;  // New callback prop
 	isProcessing?: boolean;
 	initialImageData?: string | null;
 	selectedPlantType: 'tomato' | 'corn';
@@ -19,6 +20,7 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 	isOpen,
 	onClose,
 	onAnalyze,
+	onBrowseFiles,
 	isProcessing = false,
 	initialImageData = null,
 	selectedPlantType
@@ -33,17 +35,17 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 	React.useEffect(() => {
 		if (initialImageData && isOpen) {
 			setSelectedImage(initialImageData);
-			// Start rendering animation immediately
+			setStep('analysis');
+
+			// Start rendering animation
 			setIsRendering(true);
 			setShowProgress(false);
 			setUploadProgress(0);
 
-			// Simulate rendering time (2 seconds)
 			setTimeout(() => {
 				setIsRendering(false);
 				setShowProgress(true);
 
-				// Start smooth progress animation
 				const duration = 2000; // 2 seconds
 				const steps = 100;
 				const stepTime = duration / steps;
@@ -59,50 +61,15 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 					}
 				}, stepTime);
 			}, 2000);
+		} else if (!initialImageData && isOpen) {
+			// Reset to upload step if popup opened without image
+			setSelectedImage(null);
+			setStep('upload');
 		}
 	}, [initialImageData, isOpen]);
 
-	const handleFileSelect = (file: File) => {
-		if (file && file.type.startsWith('image/')) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				setSelectedImage(e.target?.result as string);
-				setStep('analysis');
-
-				// Start rendering animation immediately
-				setIsRendering(true);
-				setShowProgress(false);
-				setUploadProgress(0);
-
-				// Simulate rendering time (2 seconds)
-				setTimeout(() => {
-					setIsRendering(false);
-					setShowProgress(true);
-
-					// Start smooth progress animation
-					const duration = 2000; // 2 seconds
-					const steps = 100;
-					const stepTime = duration / steps;
-
-					let currentStep = 0;
-					const progressInterval = setInterval(() => {
-						currentStep++;
-						const progress = Math.min((currentStep / steps) * 100, 100);
-						setUploadProgress(progress);
-
-						if (currentStep >= steps) {
-							clearInterval(progressInterval);
-						}
-					}, stepTime);
-				}, 2000);
-			};
-			reader.readAsDataURL(file);
-		}
-	};
-
 	const handleAnalyzeClick = () => {
 		if (selectedImage) {
-			console.log('Analyze button clicked with image and plant type:', selectedPlantType);
 			onAnalyze(selectedImage, selectedPlantType);
 		} else {
 			console.error('No image selected for analysis');
@@ -118,37 +85,17 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 		onClose();
 	};
 
-	const handleBrowseFiles = () => {
-		const fileInput = document.createElement('input');
-		fileInput.type = 'file';
-		fileInput.accept = 'image/*';
-		fileInput.style.display = 'none';
-		document.body.appendChild(fileInput);
-
-		fileInput.onchange = (e) => {
-			const target = e.target as HTMLInputElement;
-			if (target.files && target.files[0]) {
-				handleFileSelect(target.files[0]);
-			}
-			document.body.removeChild(fileInput);
-		};
-
-		fileInput.click();
-	};
-
 	if (!isOpen) return null;
 
 	return (
 		<div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-300">
 			<div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
 				<Card className="bg-white/95 backdrop-blur-md border-0 shadow-2xl rounded-3xl overflow-hidden">
-					{/* Mobile Layout - Vertical Stack */}
 					<div className="flex flex-col lg:flex-row">
 						{/* Image Preview Section */}
 						<div className="w-full lg:w-1/2 bg-gray-50 p-4 sm:p-6 flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
 							{selectedImage ? (
 								<div className="relative w-full h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-lg animate-in zoom-in-95 duration-500">
-									{/* Plant Type Badge */}
 									<div className="absolute top-3 left-3 z-10 animate-in slide-in-from-top-2 duration-500 delay-200">
 										<Badge className="bg-green-100 text-green-800 border-green-200 px-3 py-1">
 											<Leaf className="w-3 h-3 mr-1" />
@@ -157,7 +104,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 									</div>
 
 									{isRendering ? (
-										// Wavy rendering animation overlay
 										<div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-300">
 											<div className="relative w-full h-full">
 												{/* Wavy animation bars */}
@@ -174,7 +120,10 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 													<div className="text-center space-y-4 z-10 animate-in slide-in-from-bottom-4 duration-500">
 														<div className="relative">
 															<div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-															<div className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-t-green-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+															<div
+																className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-t-green-400 rounded-full animate-spin"
+																style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
+															></div>
 														</div>
 														<div className="text-white space-y-2">
 															<p className="text-base sm:text-lg font-semibold animate-render-pulse">Processing Image...</p>
@@ -185,6 +134,7 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 											</div>
 										</div>
 									) : null}
+
 									<img
 										src={selectedImage}
 										alt={`Selected ${selectedPlantType} plant`}
@@ -194,6 +144,9 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 									<button
 										onClick={() => {
 											setSelectedImage(null);
+											setUploadProgress(0);
+											setIsRendering(false);
+											setShowProgress(false);
 											setStep('upload');
 										}}
 										className="absolute top-2 right-2 sm:top-4 sm:right-4 p-1.5 sm:p-2 bg-white/90 rounded-full hover:bg-white transition-colors animate-in slide-in-from-top-2 duration-500 delay-300"
@@ -214,16 +167,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 											<p className="text-gray-600 text-sm sm:text-base leading-relaxed">
 												Take a clear photo of your plant's leaves, stems, or any affected areas. Our AI will analyze it for diseases and provide treatment recommendations.
 											</p>
-											<div className="flex items-center justify-center space-x-4 text-xs text-gray-500 pt-2">
-												<div className="flex items-center space-x-1">
-													<div className="w-2 h-2 bg-green-400 rounded-full"></div>
-													<span>Clear photo</span>
-												</div>
-												<div className="flex items-center space-x-1">
-													<div className="w-2 h-2 bg-green-400 rounded-full"></div>
-													<span>Good lighting</span>
-												</div>
-											</div>
 										</div>
 									</div>
 								</div>
@@ -232,7 +175,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 
 						{/* Controls Section */}
 						<div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-8 relative">
-							{/* Close Button */}
 							<button
 								onClick={handleClose}
 								className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors z-10 animate-in slide-in-from-top-2 duration-500"
@@ -240,7 +182,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 								<X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
 							</button>
 
-							{/* Content */}
 							<div className="space-y-6 sm:space-y-8 pt-8 sm:pt-0">
 								{step === 'upload' && (
 									<div className="animate-in slide-in-from-right-4 duration-500">
@@ -252,32 +193,8 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 												</p>
 											</div>
 
-											<div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 sm:p-6 border border-green-100">
-												<div className="space-y-3">
-													<h3 className="text-lg font-semibold text-gray-900 text-center">What we can detect:</h3>
-													<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
-														<div className="flex items-center justify-start space-x-2">
-															<div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-															<span className="text-left">Plant diseases</span>
-														</div>
-														<div className="flex items-center justify-start space-x-2">
-															<div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-															<span className="text-left">Nutrient deficiencies</span>
-														</div>
-														<div className="flex items-center justify-start space-x-2">
-															<div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-															<span className="text-left">Pest damage</span>
-														</div>
-														<div className="flex items-center justify-start space-x-2">
-															<div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-															<span className="text-left">Growth issues</span>
-														</div>
-													</div>
-												</div>
-											</div>
-
 											<Button
-												onClick={handleBrowseFiles}
+												onClick={onBrowseFiles}
 												className="w-full max-w-md mx-auto py-4 sm:py-5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold text-lg sm:text-xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-in slide-in-from-bottom-2 duration-500 delay-200 transform hover:scale-105"
 											>
 												<Upload className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
@@ -339,7 +256,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 												</div>
 											)}
 
-											{/* Analyze Button */}
 											<Button
 												onClick={handleAnalyzeClick}
 												disabled={isProcessing || isRendering || (showProgress && uploadProgress < 100)}
@@ -363,7 +279,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 												)}
 											</Button>
 
-											{/* Choose Different Image Button */}
 											<Button
 												onClick={() => {
 													setSelectedImage(null);
@@ -390,4 +305,4 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 	);
 };
 
-export default UploadPopup; 
+export default UploadPopup;
