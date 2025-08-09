@@ -23,7 +23,7 @@ export default function PlantMDLanding() {
 
         <About />
       </div>
-=======
+
 
 
       <About />
