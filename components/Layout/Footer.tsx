@@ -22,6 +22,7 @@ const SocialIcon = ({ Icon, href }: SocialIconProps) => (
   </a>
 );
 
+
 type FooterLinkSectionProps = {
   title: string;
   links: { href: string; text: string }[];
@@ -54,6 +55,7 @@ const Quick_Links = [
   { href: "", text: "Contact Us" },
   { href: "", text: "About Our Team" },
   { href: "", text: "Incubate Nepal 2025" },
+  {href: "https://geocrop-guessr.vercel.app", text: "Play GeoCrop Guessr"}
 ];
 const Notices = [
   { href: "", text: "General News" },
