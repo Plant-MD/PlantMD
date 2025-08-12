@@ -7,6 +7,7 @@ interface MediaItem {
 }
 
 export interface ThreadDB {
+  _id: string;
   title: string;
   vote: number;
   content: string;
@@ -17,7 +18,9 @@ export interface ThreadDB {
   createdAt: Date;
 }
 
-export interface Thread extends Document, ThreadDB {}
+export interface Thread extends Document, ThreadDB {
+  _id: string;
+}
 
 const MediaSchema = new Schema<MediaItem>(
   {
