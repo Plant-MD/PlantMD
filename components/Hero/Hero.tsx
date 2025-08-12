@@ -9,6 +9,8 @@ import Link from "next/link";
 import DragOverComponent from "../shared/DragOver";
 import { useEnhancedToast } from "@/hooks/useEnhancedToast";
 import { useDiagnosisPipeline } from "@/hooks/useDiagnosisPipeline";
+import CameraView from "@/components/scan/CameraView";
+import { Button } from "@/components/ui/button";
 
 function Hero() {
   const [showUploadPopup, setShowUploadPopup] = useState(false);
@@ -21,7 +23,15 @@ function Hero() {
     console.log("Rendering UploadPopup with isOpen:", showUploadPopup);
   }, [showUploadPopup]);
 
-  const { selectedPlant } = useHeroAnalysis();
+  const { 
+    selectedPlant, 
+    handleStartCamera, 
+    handleBrowseFiles,
+    showCamera,
+    cameraHook,
+    handleCapturePhoto,
+    handleStopCamera
+  } = useHeroAnalysis();
 
   const handlePopupAnalyze = (
     imageData: string,
@@ -35,6 +45,24 @@ function Hero() {
     setShowUploadPopup(false);
     // Start the enhanced diagnosis pipeline
     diagnosisPipeline.startAnalysis(imageData, plantType);
+  };
+
+  // Handle camera capture - when photo is taken, show upload popup
+  const handleCameraCapture = (videoElement?: HTMLVideoElement) => {
+    console.log("Camera capture initiated");
+    
+    // Directly capture from camera hook
+    const imageData = cameraHook.capturePhoto(videoElement);
+    console.log("Image data received:", !!imageData);
+    
+    if (imageData) {
+      console.log("Setting initial image data and showing popup");
+      setInitialImageData(imageData);
+      setShowUploadPopup(true);
+      handleStopCamera(); // Close camera view
+    } else {
+      console.error("No image data received from camera capture");
+    }
   };
 
   const [initialImageData, setInitialImageData] = useState<string | null>(null);
@@ -188,6 +216,7 @@ function Hero() {
 
           <DragOverComponent
             onDrop={handleFileDrop}
+            onTakePhoto={handleStartCamera}
             title="Upload Plant Photo"
             subtitle="Get instant diagnosis & treatment"
           />
@@ -219,8 +248,10 @@ function Hero() {
         onClose={() => {
           console.log("Closing upload popup");
           setShowUploadPopup(false);
+          setInitialImageData(null); // Reset initial image data
         }}
         onAnalyze={handlePopupAnalyze}
+        onBrowseFiles={handleBrowseFiles}
         isProcessing={diagnosisPipeline.isAnalyzing}
         initialImageData={initialImageData}
         selectedPlantType={selectedPlant}
@@ -235,6 +266,56 @@ function Hero() {
         currentStep={diagnosisPipeline.currentStep}
         onClose={() => diagnosisPipeline.resetAnalysis()}
       />
+
+      {showCamera && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="w-full h-full max-w-4xl max-h-screen">
+            <CameraView
+              stream={cameraHook.stream}
+              cameraReady={cameraHook.cameraReady}
+              onCapturePhoto={handleCameraCapture}
+              onStopCamera={handleStopCamera}
+            />
+          </div>
+        </div>
+      )}      {cameraHook.cameraError && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">Camera Error</h3>
+            <p className="text-gray-700 mb-4">{cameraHook.cameraError}</p>
+            <div className="text-sm text-gray-600 mb-4">
+              <p className="font-medium mb-2">Troubleshooting tips:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Make sure you've allowed camera permissions</li>
+                <li>Close other apps that might be using the camera</li>
+                <li>Try refreshing the page</li>
+                <li>Check if your camera is working in other apps</li>
+              </ul>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  cameraHook.setCameraError(null);
+                  handleStopCamera();
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  cameraHook.setCameraError(null);
+                  handleStartCamera();
+                }}
+                className="flex-1"
+              >
+                Try Again
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
