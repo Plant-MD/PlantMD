@@ -37,30 +37,26 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 			setSelectedImage(initialImageData);
 			setStep('analysis');
 
-			// Start rendering animation
+			// Start both rendering animation and progress simultaneously
 			setIsRendering(true);
-			setShowProgress(false);
+			setShowProgress(true);
 			setUploadProgress(0);
 
-			setTimeout(() => {
-				setIsRendering(false);
-				setShowProgress(true);
+			const duration = 2000; // 2 seconds
+			const steps = 100;
+			const stepTime = duration / steps;
 
-				const duration = 2000; // 2 seconds
-				const steps = 100;
-				const stepTime = duration / steps;
+			let currentStep = 0;
+			const progressInterval = setInterval(() => {
+				currentStep++;
+				const progress = Math.min((currentStep / steps) * 100, 100);
+				setUploadProgress(progress);
 
-				let currentStep = 0;
-				const progressInterval = setInterval(() => {
-					currentStep++;
-					const progress = Math.min((currentStep / steps) * 100, 100);
-					setUploadProgress(progress);
-
-					if (currentStep >= steps) {
-						clearInterval(progressInterval);
-					}
-				}, stepTime);
-			}, 2000);
+				if (currentStep >= steps) {
+					clearInterval(progressInterval);
+					setIsRendering(false);
+				}
+			}, stepTime);
 		} else if (!initialImageData && isOpen) {
 			// Reset to upload step if popup opened without image
 			setSelectedImage(null);
@@ -105,31 +101,17 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 
 									{isRendering ? (
 										<div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-300">
-											<div className="relative w-full h-full">
-												{/* Wavy animation bars */}
-												<div className="absolute bottom-0 left-0 w-full h-full mx-auto">
-													<div className="wavy-render-bar bar-1"></div>
-													<div className="wavy-render-bar bar-2"></div>
-													<div className="wavy-render-bar bar-3"></div>
-													<div className="wavy-render-bar bar-4"></div>
-													<div className="wavy-render-bar bar-5"></div>
+											<div className="text-center space-y-4 z-10 animate-in slide-in-from-bottom-4 duration-500">
+												<div className="relative">
+													<div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+													<div
+														className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-t-green-400 rounded-full animate-spin"
+														style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
+													></div>
 												</div>
-
-												{/* Centered text */}
-												<div className="absolute inset-0 flex items-center justify-center">
-													<div className="text-center space-y-4 z-10 animate-in slide-in-from-bottom-4 duration-500">
-														<div className="relative">
-															<div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-															<div
-																className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-t-green-400 rounded-full animate-spin"
-																style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
-															></div>
-														</div>
-														<div className="text-white space-y-2">
-															<p className="text-base sm:text-lg font-semibold animate-render-pulse">Processing Image...</p>
-															<p className="text-xs sm:text-sm opacity-80">Preparing for analysis</p>
-														</div>
-													</div>
+												<div className="text-white space-y-2">
+													<p className="text-base sm:text-lg font-semibold animate-render-pulse">Processing Image...</p>
+													<p className="text-xs sm:text-sm opacity-80">Preparing for analysis</p>
 												</div>
 											</div>
 										</div>
@@ -233,7 +215,7 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
 												<div className="space-y-3 animate-in slide-in-from-bottom-2 duration-500 delay-400">
 													<div className="flex justify-between text-sm">
 														<span className="text-gray-600 font-medium">Processing Image</span>
-														<span className="text-green-600 font-semibold">{Math.round(uploadProgress)}%</span>
+														<span className="text-green-600 font-semibold">{uploadProgress.toFixed(1)}%</span>
 													</div>
 													<div className="relative">
 														<div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">

@@ -2,6 +2,7 @@
 import { Leaf, Menu, X, LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -12,7 +13,7 @@ import CreatePostButton from '../shared/CreatePostButton'
 function Header() {
     const { data: session } = useSession();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const router = useRouter();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -21,6 +22,12 @@ function Header() {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
+
+    // Optimized navigation handler
+    const handleNavigation = (href: string) => {
+        closeMenu()
+        router.push(href)
+    }
 
     return (
         <nav className="sticky top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-sage/20 py-2">
@@ -90,13 +97,12 @@ function Header() {
                 >
                     <div className="py-4 space-y-4 border-t border-sage/20 bg-white/90 backdrop-blur-sm">
                         <Search />
-                        <Link
-                            href="/feedback"
-                            onClick={closeMenu}
-                            className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center"
+                        <button
+                            onClick={() => handleNavigation('/feedback')}
+                            className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center cursor-pointer"
                         >
                             Give Feedback
-                        </Link>
+                        </button>
 
                         <div className="px-4">
                             {session ? (

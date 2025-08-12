@@ -2,6 +2,7 @@
 import { Leaf, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { LogIn, LogOut } from 'lucide-react'
 import { signIn, signOut, useSession } from 'next-auth/react'
@@ -12,23 +13,22 @@ function Header() {
     const { data: session } = useSession()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const pathname = usePathname()
+    const router = useRouter()
     
     const isHomePage = pathname === '/'
 
     const allNavLinks = [
-        { label: "About Us", href: "#about", homeOnly: true },
-        { label: "Tutorial", href: "#tutorial", homeOnly: true },
-        { label: "Contact", href: "#footer", homeOnly: false },
+        { label: "About Us", href: "/#about", homeOnly: false },
+        { label: "Tutorial", href: "/#tutorial", homeOnly: false },
+        { label: "Contact", href: "/#footer", homeOnly: false },
 
-        { label: "Community", href: "community", homeOnly: false },
-        { label: "Plant Calendar", href: "#calendar", homeOnly: true },
+        { label: "Community", href: "/community", homeOnly: false },
+        { label: "Plant Calendar", href: "/plant-calendar", homeOnly: false },
         { label: "Plantbook", href: "/plantbook", homeOnly: false },
 
     ]
 
-    const navLinks = allNavLinks.filter(link => 
-        isHomePage ? true : !link.homeOnly
-    )
+    const navLinks = allNavLinks
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -37,6 +37,29 @@ function Header() {
     const closeMenu = () => {
         setIsMenuOpen(false)
     }
+
+    // Optimized navigation handler with preloading
+    const handleNavigation = (href: string) => {
+        closeMenu()
+        
+        // Preload the page for faster navigation
+        if (href.startsWith('/') && !href.includes('#')) {
+            router.prefetch(href)
+        }
+        
+        // Use router.push for programmatic navigation
+        if (href.startsWith('/')) {
+            router.push(href)
+        }
+    }
+
+    // Preload main pages on component mount for faster navigation
+    React.useEffect(() => {
+        const mainPages = ['/community', '/plant-calendar', '/plantbook', '/scan', '/feedback']
+        mainPages.forEach(page => {
+            router.prefetch(page)
+        })
+    }, [router])
 
     return (
         <nav className="sticky top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-sage/20 py-2">
@@ -59,23 +82,23 @@ function Header() {
                     </Link>
                     <nav className="hidden md:flex items-center gap-6 text-lg font-medium">
                         {navLinks.map(({ label, href }) => (
-                            <Link
+                            <button
                                 key={label}
-                                href={href}
-                                className="relative group text-gray-600 transition-colors duration-200 hover:text-green-600 font-roboto"
+                                onClick={() => handleNavigation(href)}
+                                className="relative group text-gray-600 transition-colors duration-200 hover:text-green-600 font-roboto cursor-pointer"
                             >
                                 <span className="capitalize">{label}</span>
                                 <span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-green-500 transition-all duration-300 group-hover:w-full" />
-                            </Link>
+                            </button>
                         ))}
                         
                         {session && (
-                            <Link
-                                href="/feedback"
-                                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-roboto"
+                            <button
+                                onClick={() => handleNavigation('/feedback')}
+                                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-roboto cursor-pointer"
                             >
                                 Give Feedback
-                            </Link>
+                            </button>
                         )}
 
                         {session ? (
@@ -115,34 +138,31 @@ function Header() {
                     }`}>
                     <div className="py-4 space-y-4 border-t border-sage/20 bg-white/90 backdrop-blur-sm">
                         {navLinks.map(({ label, href }) => (
-                            <Link
+                            <button
                                 key={label}
-                                href={href}
-                                onClick={closeMenu}
-                                className="block px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200 font-roboto"
+                                onClick={() => handleNavigation(href)}
+                                className="block w-full text-left px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200 font-roboto cursor-pointer"
                             >
                                 <span className="capitalize">{label}</span>
-                            </Link>
+                            </button>
                         ))}
 
                         {session && (
-                            <Link
-                                href="/feedback"
-                                onClick={closeMenu}
-                                className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center"
+                            <button
+                                onClick={() => handleNavigation('/feedback')}
+                                className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center cursor-pointer"
                             >
                                 Give Feedback
-                            </Link>
+                            </button>
                         )}
 
                         {!isHomePage && session && (
-                            <Link
-                                href="/scan"
-                                onClick={closeMenu}
-                                className="block mx-4 bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-roboto text-center"
+                            <button
+                                onClick={() => handleNavigation('/scan')}
+                                className="block mx-4 bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-roboto text-center cursor-pointer"
                             >
                                 Use App
-                            </Link>
+                            </button>
                         )}
 
                         <div className="px-4">

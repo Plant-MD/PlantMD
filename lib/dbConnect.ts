@@ -35,9 +35,31 @@ export const dbConnect = async (): Promise<void> => {
     return;
   }
 
-  // Use environment variable or default value for MongoDB URI
-  const mongoUri = process.env.MONGODB_URI;
+  // Resolve MongoDB URI from common env names
+  const mongoUri =
+    process.env.MONGODB_URI ||
+    process.env.DATABASE_URL ||
+    process.env.MONGODB_ATLAS_URI ||
+    process.env.NEXT_PUBLIC_MONGODB_URI; // last resort, for misconfigured env
+
   if (!mongoUri) {
+    console.error(
+      "MongoDB connection URI is missing. Ensure one of MONGODB_URI, DATABASE_URL, or MONGODB_ATLAS_URI is set in your .env.local."
+    );
+    console.error("Environment check:", {
+      hasMONGODB_URI: !!process.env.MONGODB_URI,
+      hasDATABASE_URL: !!process.env.DATABASE_URL,
+      hasMONGODB_ATLAS_URI: !!process.env.MONGODB_ATLAS_URI,
+      hasNEXT_PUBLIC_MONGODB_URI: !!process.env.NEXT_PUBLIC_MONGODB_URI,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
+    // In development, allow the app to continue with mock data
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Development mode: Continuing without database connection");
+      return;
+    }
+    
     throw new Error(
       "MongoDB connection URI is not defined in environment variables."
     );
@@ -77,16 +99,26 @@ export const dbConnect = async (): Promise<void> => {
   } catch (error: any) {
     console.error("Database connection failed. Error details:", error);
 
+    // In development, allow the app to continue with mock data
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Development mode: Continuing without database connection");
+      return;
+    }
+
     // Provide more specific error messages
-    if (error.code === "ETIMEOUT") {
+    if (error.code === "ETIMEOUT" || error.code === "ETIMEDOUT" || /server selection timed out/i.test(error?.message)) {
       throw new Error(
-        "Database connection timeout - please check your network connection and MongoDB Atlas configuration"
+        "Database connection timeout - verify Atlas IP Access List, network connectivity, and cluster status"
       );
-    } else if (error.code === "ENOTFOUND") {
+    } else if (error.code === "ENOTFOUND" || /ENOTFOUND/i.test(error?.message)) {
       throw new Error(
         "Database hostname not found - please verify your MongoDB connection string"
       );
-    } else if (error.message?.includes("authentication")) {
+    } else if (error.name === 'MongoParseError') {
+      throw new Error(
+        "Invalid MongoDB URI - if your password contains special characters, URL-encode it (e.g., %40 for @)"
+      );
+    } else if (error.message?.includes("authentication") || /auth/i.test(error?.message)) {
       throw new Error(
         "Database authentication failed - please check your credentials"
       );
