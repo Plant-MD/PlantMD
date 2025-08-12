@@ -37,10 +37,7 @@ export default function ThreadCard({ thread }: { thread: ThreadDB }) {
   const [voteCount, setVoteCount] = useState(thread.vote);
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  const hasMedia =
-    thread.media?.length > 0 &&
-    typeof thread.media[0].data === "string" &&
-    thread.media[0].contentType;
+const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
 
   async function fetchComments() {
     setLoadingComments(true);
@@ -218,6 +215,9 @@ export default function ThreadCard({ thread }: { thread: ThreadDB }) {
             onClose={() => setIsCommentsOpen(false)}
             comments={comments}
             loading={loadingComments}
+             threadId={thread._id} // Pass the thread ID
+         author={thread.author} // Pass the author
+         refreshComments={fetchComments}
           />
         </div>
       </div>

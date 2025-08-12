@@ -5,17 +5,22 @@ import Search from "@/components/plantbook/Search";
 import { AppSidebar } from "@/components/plantbook/Sidebar/Sidebar";
 import ThreadCard from "@/components/plantbook/Thread";
 
+interface MediaItem {
+  data: Buffer;          // Binary image data
+  contentType: string;   // MIME type, e.g. "image/png"
+}
+
 interface Thread {
   _id: string;
   title: string;
   vote: number;
   content: string;
-  media: { base64: string; contentType: string }[];
-  category: string;
+  media: MediaItem[]; 
+    category: string;
   comments: string[];
   author: string;
-  updatedAt: string;
-  createdAt: string;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 function Community() {
