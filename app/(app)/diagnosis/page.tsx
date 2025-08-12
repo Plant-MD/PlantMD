@@ -126,11 +126,7 @@ function Diagnosis() {
                 </Badge>
               )}
             </div>
-            {sessionId && (
-              <div className="text-xs text-gray-500">
-                Session: {sessionId.split('_')[1]}
-              </div>
-            )}
+            {/* Removed session display */}
           </div>
         </div>
       </div>

@@ -15,6 +15,17 @@ function DiagnosisCard(props: DiseaseResponse) {
     return "Fully confident";
   };
 
+  // Early return if required data is missing
+  if (!disease || !disease.disease_name) {
+    return (
+      <div className="mt-8 w-full shadow-lg border rounded-3xl overflow-hidden">
+        <div className="p-6 bg-white text-gray-700 text-sm">
+          <p>No disease information available</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-8 w-full shadow-lg border rounded-3xl overflow-hidden">
       {/* Header */}
@@ -27,16 +38,16 @@ function DiagnosisCard(props: DiseaseResponse) {
           >
             {getConfidenceLabel(confidence)}
           </Badge>
-          <span className='inline ml-2 font-roboto'>{confidence}%</span>
+          <span className='inline ml-2 font-roboto'>{confidence.toFixed(1)}%</span>
         </span>
       </div>
 
       {/* Content */}
       <div className="p-6 bg-white text-gray-700 text-sm space-y-4 font-roboto">
         <p>
-          {disease.disease_name.replace(/_/g, " ")} is a plant disease that primarily affects {disease.common_plants.join(', ')}. 
-          It falls under the category of {disease.category} and is identified by the disease code {disease.disease_code}. 
-          The associated risk factor is {disease.risk_factor}.
+          {disease.disease_name.replace(/_/g, " ")} is a plant disease that primarily affects {disease.common_plants?.join(', ') || 'various plants'}. 
+          It falls under the category of {disease.category || 'unknown'} and is identified by the disease code {disease.disease_code || 'N/A'}. 
+          The associated risk factor is {disease.risk_factor || 'unknown'}.
         </p>
 
         <div>
@@ -45,9 +56,13 @@ function DiagnosisCard(props: DiseaseResponse) {
             Suggested Cures
           </h2>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            {cure.cure.slice(0, 3).map((c, idx) => (
-              <li key={idx}>{c}</li>
-            ))}
+            {cure?.cure && Array.isArray(cure.cure) ? (
+              cure.cure.slice(0, 3).map((c, idx) => (
+                <li key={idx}>{c}</li>
+              ))
+            ) : (
+              <li>No cure information available</li>
+            )}
           </ul>
         </div>
       </div>

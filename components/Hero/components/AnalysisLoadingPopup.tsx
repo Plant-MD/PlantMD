@@ -121,7 +121,7 @@ const AnalysisLoadingPopup: React.FC<AnalysisLoadingPopupProps> = ({
             <div className="mb-8">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-gray-600 font-medium">Analysis Progress</span>
-                <span className="text-green-600 font-semibold">{Math.round(progress)}%</span>
+                <span className="text-green-600 font-semibold">{progress.toFixed(1)}%</span>
               </div>
               <div className="relative">
                 <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">

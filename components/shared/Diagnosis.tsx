@@ -7,6 +7,17 @@ import { HeartPulse, Info } from "lucide-react";
 function MainDiagnosis(props: DiseaseResponse) {
   const { disease, cure, confidence } = props;
 
+  // Early return if required data is missing
+  if (!disease || !disease.disease_name) {
+    return (
+      <div className="mt-10 px-4 sm:px-6 md:px-8 w-full max-w-6xl mx-auto">
+        <div className="text-center py-8">
+          <p className="text-gray-500">No disease information available</p>
+        </div>
+      </div>
+    );
+  }
+
   const getConfidenceLabel = (confidence: number) => {
     if (confidence <= 25) return "Not sure";
     if (confidence <= 50) return "Pretty sure";
@@ -15,8 +26,8 @@ function MainDiagnosis(props: DiseaseResponse) {
   };
 
   const confidenceLabel = getConfidenceLabel(confidence);
-  const confidencePercent = confidence.toFixed(2);
-  const formattedPlants = disease.common_plants.join(", ");
+  const confidencePercent = confidence.toFixed(1);
+  const formattedPlants = disease.common_plants?.join(", ") || "Unspecified species";
 
   return (
     <div className="mt-10 px-4 sm:px-6 md:px-8 w-full max-w-6xl mx-auto ">
@@ -74,21 +85,21 @@ function MainDiagnosis(props: DiseaseResponse) {
               <th className="px-4 py-2 text-left font-medium bg-gray-50">
                 Category
               </th>
-              <td className="px-4 py-2">{disease.category}</td>
+              <td className="px-4 py-2">{disease.category || "Unknown"}</td>
             </tr>
             <tr className="border-b">
               <th className="px-4 py-2 text-left font-medium bg-gray-50">
                 Common Plants
               </th>
               <td className="px-4 py-2">
-                {formattedPlants || "Unspecified species"}
+                {formattedPlants}
               </td>
             </tr>
             <tr className="border-b">
               <th className="px-4 py-2 text-left font-medium bg-gray-50">
                 Risk Factor
               </th>
-              <td className="px-4 py-2">{disease.risk_factor}</td>
+              <td className="px-4 py-2">{disease.risk_factor || "Unknown"}</td>
             </tr>
             <tr className="border-b">
               <th className="px-4 py-2 text-left font-medium bg-gray-50">
@@ -102,7 +113,7 @@ function MainDiagnosis(props: DiseaseResponse) {
               <th className="px-4 py-2 text-left font-medium bg-gray-50">
                 Disease Code
               </th>
-              <td className="px-4 py-2">{disease.disease_code}</td>
+              <td className="px-4 py-2">{disease.disease_code || "N/A"}</td>
             </tr>
           </tbody>
         </table>
@@ -115,7 +126,7 @@ function MainDiagnosis(props: DiseaseResponse) {
           Suggested Treatments
         </h3>
 
-        {cure.cure.length > 0 ? (
+        {cure?.cure && Array.isArray(cure.cure) && cure.cure.length > 0 ? (
           <ul className="list-disc pl-5 text-gray-700 text-sm sm:text-base space-y-1">
             {cure.cure.slice(0, 3).map((c, i) => (
               <li key={i}>{c}</li>
