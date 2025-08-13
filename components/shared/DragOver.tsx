@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 
 interface DragOverComponentProps {
   onDrop: (files: FileList) => void;
+  onTakePhoto?: () => void;
   title?: string;
   subtitle?: string;
   className?: string;
@@ -11,6 +12,7 @@ interface DragOverComponentProps {
 
 function DragOverComponent({
   onDrop,
+  onTakePhoto,
   title = "Upload Plant Photo",
   subtitle = "Get instant diagnosis & treatment",
   className = "",
@@ -63,8 +65,8 @@ function DragOverComponent({
 
         {/* Upload Icon and Text */}
         <div className="mb-6 text-center">
-          <h3 className="mb-2 text-2xl font-extrabold text-gray-900 ">{isDragOver ? "Drop Your Image" : title}</h3>
-          <p className="text-md text-gray-600 font-poppins">{subtitle}</p>
+          <h3 className="mb-2 text-xl font-extrabold text-gray-900 ">{isDragOver ? "Drop Your Image" : title}</h3>
+          <p className="text-md text-gray-600 font-roboto">{subtitle}</p>
         </div>
 
         {/* Upload Buttons */}
@@ -72,8 +74,8 @@ function DragOverComponent({
           <Button
             variant="outline"
             size="lg"
-            className="rounded-xl border-2  py-3 font-semibold text-forest-green border-forest-green hover:border-leaf-green  transition-all duration-300"
-            onClick={() => alert("Camera functionality requires native app support.")}
+            className="rounded-xl border-2  py-3 font-semibold text-forest border-leaf-green hover:border-mint  transition-all duration-300"
+            onClick={onTakePhoto || (() => alert("Camera functionality not available."))}
           >
 
             <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +92,7 @@ function DragOverComponent({
           <label htmlFor="file-upload">
             <Button
               size="lg"
-              className="rounded-xl w-full cursor-pointer bg-forest-green py-3 font-semibold text-white shadow-md hover:bg-leaf-green hover:shadow-lg transition-all duration-300"
+              className="rounded-xl w-full cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 py-3 font-semibold text-white shadow-md hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-300"
               asChild
             >
               <span>

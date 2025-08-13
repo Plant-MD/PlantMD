@@ -6,12 +6,14 @@ export const useCamera = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const startCamera = useCallback(async () => {
     setCameraError(null);
     setCameraReady(false);
+    setIsStarting(true);
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       setCameraError('Camera not supported on this device');
@@ -76,6 +78,8 @@ export const useCamera = () => {
       }
 
       setCameraError(errorMessage);
+    } finally {
+      setIsStarting(false);
     }
   }, [stream]);
 
@@ -88,6 +92,7 @@ export const useCamera = () => {
     }
     setCameraReady(false);
     setCameraError(null);
+    setIsStarting(false);
   }, [stream]);
 
   // Updated capture function that takes video element as parameter
@@ -96,18 +101,10 @@ export const useCamera = () => {
 
     // Use passed video element or fallback to ref
     const video = videoElement || videoRef.current;
-    const canvas = canvasRef.current;
-
-    if (!video || !canvas) {
-      console.error('Video or canvas not available');
+    
+    if (!video) {
+      console.error('Video element not available');
       setCameraError('Camera components not ready. Please try again.');
-      return null;
-    }
-
-    const context = canvas.getContext('2d');
-    if (!context) {
-      console.error('Canvas context not available');
-      setCameraError('Failed to get canvas context. Please try again.');
       return null;
     }
 
@@ -115,10 +112,28 @@ export const useCamera = () => {
       console.error('No camera stream available');
       setCameraError('No camera stream. Please restart camera.');
       return null;
+    }    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    
+if (!context) {
+      console.error('Canvas context not available');
+      setCameraError('Failed to get canvas context. Please try again.');
+      return null;
     }
 
     try {
-      // Get video dimensions
+      if (video.readyState < 2) {
+        console.error('Video not ready yet, readyState:', video.readyState);
+        setCameraError('Camera is still loading. Please wait a moment and try again.');
+        return null;
+      }
+
+      if (video.paused || video.ended) {
+        console.error('Video is not playing');
+        setCameraError('Camera video is not active. Please restart the camera.');
+        return null;
+      }
+
       const videoWidth = video.videoWidth || video.clientWidth || 640;
       const videoHeight = video.videoHeight || video.clientHeight || 480;
       
@@ -181,6 +196,7 @@ export const useCamera = () => {
     stream,
     cameraError,
     cameraReady,
+    isStarting,
     setCameraError,
     startCamera,
     stopCamera,
