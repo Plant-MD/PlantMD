@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 
 interface DragOverComponentProps {
   onDrop: (files: FileList) => void;
+  onTakePhoto?: () => void;
   title?: string;
   subtitle?: string;
   className?: string;
@@ -11,6 +12,7 @@ interface DragOverComponentProps {
 
 function DragOverComponent({
   onDrop,
+  onTakePhoto,
   title = "Upload Plant Photo",
   subtitle = "Get instant diagnosis & treatment",
   className = "",
@@ -73,7 +75,7 @@ function DragOverComponent({
             variant="outline"
             size="lg"
             className="rounded-xl border-2  py-3 font-semibold text-forest border-leaf-green hover:border-mint  transition-all duration-300"
-            onClick={() => alert("Camera functionality requires native app support.")}
+            onClick={onTakePhoto || (() => alert("Camera functionality not available."))}
           >
 
             <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
