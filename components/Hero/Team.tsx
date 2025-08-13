@@ -7,17 +7,9 @@ export default function TeamSection() {
       <img
         src="/contact.png"
         alt="Background"
-        className="w-full object-contain"
+        className="w-full h-auto object-contain max-h-screen"
+        style={{ display: 'block', margin: '0 auto' }}
       />
-
-      {/* Overlay positioned absolutely but scaling with image */}
-      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-        <img
-          src="/credits.png"
-          alt="Transparent Overlay"
-          className="w-full h-full object-contain"
-        />
-      </div>
     </div>
   );
 }

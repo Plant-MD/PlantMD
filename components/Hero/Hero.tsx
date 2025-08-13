@@ -191,14 +191,15 @@ function Hero() {
 
       {/* Main Content Split */}
       <div className="flex w-full h-screen">
-        {/* Left - Full image cover */}
-        <div className="w-1/2 relative hidden md:block">
+        {/* Left - Full image fit (contain) */}
+        <div className="w-1/2 relative hidden md:flex items-center justify-center bg-white aspect-square" style={{ aspectRatio: '1 / 1', height: '100vh', maxHeight: '100vw' }}>
           <Image
             src="/hero_bg.png"
             alt="temp_background"
             fill
-            className="object-cover"
+            className="object-contain"
             priority
+            style={{ objectFit: 'contain' }}
           />
         </div>
 

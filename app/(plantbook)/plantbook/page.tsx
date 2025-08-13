@@ -96,7 +96,10 @@ function PlantBook() {
               if (!open) router.push('/')
             }}
           >
-            <DialogContent className="backdrop-blur-xl bg-white/40 border-white/30">
+            <DialogContent
+              className="bg-white rounded-xl shadow-2xl"
+              style={{ backdropFilter: "blur(4px)" }}
+            >
               <DialogHeader>
                 <DialogTitle className="text-center text-2xl font-semibold text-forest-green">
                   Sign in required
@@ -104,7 +107,7 @@ function PlantBook() {
               </DialogHeader>
               <div className="text-center text-neutral-gray">
                 <p className="mb-6">Sign in to access and participate in the PlantBook community.</p>
-                <Button onClick={() => signIn('google')} className="bg-green-600 hover:bg-leaf-green text-white">
+                <Button onClick={() => signIn('google')} className="bg-green-600 hover:bg-leaf-green text-white border-0">
                   <LogIn className="w-4 h-4 mr-2" />
                   Sign in with Google
                 </Button>
