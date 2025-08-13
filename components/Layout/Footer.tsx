@@ -1,14 +1,13 @@
 import Link from "next/link";
 
 import { Instagram, Youtube, Github } from 'lucide-react';
-import FooterNewsletter from "./FooterNewsletter";
 
-import { Oswald } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-const oswald = Oswald({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: "700",
-  variable: "--font-oswald",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 type SocialIconProps = {
@@ -35,9 +34,20 @@ const FooterLinkSection = ({ title, links }: FooterLinkSectionProps) => (
     <ul className="space-y-2 text-sm text-white text-center md:text-left">
       {links.map((link, index) => (
         <li key={index}>
-          <Link href={link.href} className="hover:text-white transition-colors duration-200">
-            {link.text}
-          </Link>
+          {link.href.startsWith('http') ? (
+            <a 
+              href={link.href} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors duration-200"
+            >
+              {link.text}
+            </a>
+          ) : (
+            <Link href={link.href} className="hover:text-white transition-colors duration-200">
+              {link.text}
+            </Link>
+          )}
         </li>
       ))}
     </ul>
@@ -49,22 +59,20 @@ const FooterLinkSection = ({ title, links }: FooterLinkSectionProps) => (
 // ---
 
 const Quick_Links = [
-  { href: "", text: "About Us" },
-  { href: "", text: "Frequently Asked Questions" },
-  { href: "", text: "Contact Us" },
-  { href: "", text: "About Our Team" },
-  { href: "", text: "Incubate Nepal 2025" },
+  { href: "#about", text: "About Us" },
+  { href: "https://www.incubatenepal.com/", text: "Incubate Nepal" },
   { href: "/privacy", text: "Privacy Policy" },
+  { href: "/terms", text: "Terms of Service" },
 ];
 const Notices = [
-  { href: "", text: "General News" },
-  { href: "", text: "plantmd.xyz@gmail.com" },
+ 
+  { href: "mailto:plantmd.xyz@gmail.com?subject=Contact%20PlantMD&body=Hello%20PlantMD%20Team%2C%0A%0A", text: "plantmd.xyz@gmail.com" },
 ];
 
 const socialIcons = [
-  { Icon: Instagram, href: "https://www.instagram.com/" },
-  { Icon: Github, href: "https://github.com/plant-MD/" },
-  { Icon: Youtube, href: "https://www.youtube.com/ " },
+  { Icon: Instagram, href: "https://www.instagram.com/plantmd_/" },
+  { Icon: Github, href: "https://github.com/Plant-MD" },
+  { Icon: Youtube, href: "https://www.youtube.com/@PlantMD" },
 ];
 
 export default function Footer() {
@@ -94,8 +102,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 justify-center">
             {/* Logo and Description - occupies 1 column on small screens, 1 on medium+ */}
             <div className="md:col-span-1 ">
-              <h2 className={`${oswald.className} text-4xl font-bold mb-4 font-oswald text-white text-center md:text-left`}>PlantMD</h2>
-            <p className="text-sm text-white mb-6 font-roboto mx-auto md:mx-0 max-w-xs text-center md:text-left "> {/* Added mx-auto for centering */}
+              <h2 className={`${poppins.className} text-4xl font-extrabold mb-4 font-poppins text-white text-center md:text-left`}>PlantMD</h2>
+            <p className="text-sm text-white mb-6 font-poppins mx-auto md:mx-0 max-w-xs text-center md:text-left "> {/* Added mx-auto for centering */}
               Diagnose plant diseases instantly and get reliable treatment methods.
             </p>
             <div className="flex gap-4 justify-center md:justify-start">
@@ -106,14 +114,12 @@ export default function Footer() {
           </div>
 
           {/* Link Sections - occupies 2 columns on medium+ screens, side by side */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:ml-20  font-roboto text-center"> {/* Changed to grid for better control */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:ml-20  font-poppins text-center"> {/* Changed to grid for better control */}
             <FooterLinkSection title="Quick Links" links={Quick_Links} />
             <FooterLinkSection title="Contact Us" links={Notices} />
           </div>
         </div>
 
-        {/* Newsletter - Full width at the bottom of the main content section */}
-        <FooterNewsletter />
       </div>
 
     </div>

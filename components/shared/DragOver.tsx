@@ -63,8 +63,8 @@ function DragOverComponent({
 
         {/* Upload Icon and Text */}
         <div className="mb-6 text-center">
-          <h3 className="mb-2 text-xl font-extrabold text-gray-900 ">{isDragOver ? "Drop Your Image" : title}</h3>
-          <p className="text-md text-gray-600 font-roboto">{subtitle}</p>
+          <h3 className="mb-2 text-2xl font-extrabold text-gray-900 ">{isDragOver ? "Drop Your Image" : title}</h3>
+          <p className="text-md text-gray-600 font-poppins">{subtitle}</p>
         </div>
 
         {/* Upload Buttons */}
@@ -72,7 +72,7 @@ function DragOverComponent({
           <Button
             variant="outline"
             size="lg"
-            className="rounded-xl border-2  py-3 font-semibold text-forest border-leaf-green hover:border-mint  transition-all duration-300"
+            className="rounded-xl border-2  py-3 font-semibold text-forest-green border-forest-green hover:border-leaf-green  transition-all duration-300"
             onClick={() => alert("Camera functionality requires native app support.")}
           >
 
@@ -90,7 +90,7 @@ function DragOverComponent({
           <label htmlFor="file-upload">
             <Button
               size="lg"
-              className="rounded-xl w-full cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 py-3 font-semibold text-white shadow-md hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-300"
+              className="rounded-xl w-full cursor-pointer bg-forest-green py-3 font-semibold text-white shadow-md hover:bg-leaf-green hover:shadow-lg transition-all duration-300"
               asChild
             >
               <span>

@@ -8,6 +8,13 @@ import { LogIn, LogOut } from 'lucide-react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { Oswald } from "next/font/google"
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-oswald",
+})
 
 function Header() {
     const { data: session } = useSession()
@@ -22,9 +29,8 @@ function Header() {
         { label: "Tutorial", href: "/#tutorial", homeOnly: false },
         { label: "Contact", href: "/#footer", homeOnly: false },
 
-        { label: "Community", href: "/community", homeOnly: false },
+        { label: "PlantBook", href: "/plantbook", homeOnly: false },
         { label: "Plant Calendar", href: "/plant-calendar", homeOnly: false },
-        { label: "Plantbook", href: "/plantbook", homeOnly: false },
 
     ]
 
@@ -55,7 +61,7 @@ function Header() {
 
     // Preload main pages on component mount for faster navigation
     React.useEffect(() => {
-        const mainPages = ['/community', '/plant-calendar', '/plantbook', '/scan', '/feedback']
+        const mainPages = ['/plant-calendar', '/plantbook', '/scan', '/feedback']
         mainPages.forEach(page => {
             router.prefetch(page)
         })
@@ -75,7 +81,7 @@ function Header() {
                             />
                         </div>
                         <div className="hidden sm:block">
-                            <h1 className="text-xl sm:text-2xl font-bold font-oswald tracking-wider text-left bg-black bg-clip-text text-transparent">
+                            <h1 className={`${oswald.className} text-xl sm:text-2xl font-bold tracking-wider text-left bg-black bg-clip-text text-transparent`}>
                                 PlantMD
                             </h1>
                         </div>
@@ -85,7 +91,7 @@ function Header() {
                             <button
                                 key={label}
                                 onClick={() => handleNavigation(href)}
-                                className="relative group text-gray-600 transition-colors duration-200 hover:text-green-600 font-roboto cursor-pointer"
+                                className="relative group text-gray-600 transition-colors duration-200 hover:text-green-600 font-poppins cursor-pointer"
                             >
                                 <span className="capitalize">{label}</span>
                                 <span className="absolute left-0 -bottom-1 w-0 h-[1px] bg-green-500 transition-all duration-300 group-hover:w-full" />
@@ -95,7 +101,7 @@ function Header() {
                         {session && (
                             <button
                                 onClick={() => handleNavigation('/feedback')}
-                                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-roboto cursor-pointer"
+                                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-poppins cursor-pointer"
                             >
                                 Give Feedback
                             </button>
@@ -104,7 +110,7 @@ function Header() {
                         {session ? (
                             <Button
                                 onClick={() => signOut()}
-                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
+                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-poppins text-md"
                             >
                                 <LogOut className="h-4 w-4 mr-2" />
                                 Sign Out
@@ -112,7 +118,7 @@ function Header() {
                         ) : (
                             <Button
                                 onClick={() => signIn('google')}
-                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-roboto text-md"
+                                className="bg-deep-mint hover:bg-deep-mint text-white px-4 lg:px-6 py-2 rounded-md transition-colors font-poppins text-md"
                             >
                                 <LogIn className="h-4 w-4 mr-2" />
                                 Sign In
@@ -141,7 +147,7 @@ function Header() {
                             <button
                                 key={label}
                                 onClick={() => handleNavigation(href)}
-                                className="block w-full text-left px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200 font-roboto cursor-pointer"
+                                className="block w-full text-left px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200 font-poppins cursor-pointer"
                             >
                                 <span className="capitalize">{label}</span>
                             </button>
@@ -150,7 +156,7 @@ function Header() {
                         {session && (
                             <button
                                 onClick={() => handleNavigation('/feedback')}
-                                className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-roboto text-center cursor-pointer"
+                                className="block mx-4 bg-white border-2 border-green-600 text-leaf-green px-4 py-2 rounded-md transition-colors font-poppins text-center cursor-pointer"
                             >
                                 Give Feedback
                             </button>
@@ -159,7 +165,7 @@ function Header() {
                         {!isHomePage && session && (
                             <button
                                 onClick={() => handleNavigation('/scan')}
-                                className="block mx-4 bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-roboto text-center cursor-pointer"
+                                className="block mx-4 bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-poppins text-center cursor-pointer"
                             >
                                 Use App
                             </button>
@@ -172,7 +178,7 @@ function Header() {
                                         signOut()
                                         closeMenu()
                                     }}
-                                    className="w-full bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-roboto"
+                                    className="w-full bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-poppins"
                                 >
                                     <LogOut className="h-4 w-4 mr-2" />
                                     Sign Out
@@ -183,7 +189,7 @@ function Header() {
                                         signIn('google')
                                         closeMenu()
                                     }}
-                                    className="w-full bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-roboto"
+                                    className="w-full bg-plant-dark hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors font-poppins"
                                 >
                                     <LogIn className="h-4 w-4 mr-2" />
                                     Sign In

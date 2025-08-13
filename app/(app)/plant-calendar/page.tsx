@@ -29,13 +29,13 @@ export default function PlantCalendarPage() {
           >
             <DialogContent className="backdrop-blur-xl bg-white/40 border-white/30">
               <DialogHeader>
-                <DialogTitle className="text-center text-2xl font-semibold text-emerald-900">
+                <DialogTitle className="text-center text-2xl font-semibold text-forest-green">
                   Sign in required
                 </DialogTitle>
               </DialogHeader>
-              <div className="text-center text-emerald-900/80">
+              <div className="text-center text-forest-green/80">
                 <p className="mb-6">Sign in to access and manage your Plant Calendar tasks.</p>
-                <Button onClick={() => signIn('google')} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button onClick={() => signIn('google')} className="bg-forest-green hover:bg-leaf-green text-white">
                   <LogIn className="w-4 h-4 mr-2" />
                   Sign in with Google
                 </Button>
