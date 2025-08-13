@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import CureModel from "@/models/Cure";
 import DiseaseModel from "@/models/Disease";
+import { MOCK_DISEASE_DATA } from "@/lib/mock/diseaseData";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,51 +21,88 @@ export async function GET(request: NextRequest) {
 
     console.log("Searching for disease:", diseaseName);
 
-    // Connect to database with retry logic
-    let connectionAttempts = 0;
-    const maxAttempts = 2;
-    
-    while (connectionAttempts < maxAttempts) {
-      try {
-        await dbConnect();
-        break; // Connection successful, exit retry loop
-      } catch (error: any) {
-        connectionAttempts++;
-        console.error(`Database connection attempt ${connectionAttempts} failed:`, error.message);
-        
-        if (connectionAttempts >= maxAttempts) {
-          // Determine appropriate error message based on error type
-          let errorMessage = "Database temporarily unavailable";
-          let statusCode = 503;
-          
-          if (error.message?.includes('timeout')) {
-            errorMessage = "Database connection timeout - please try again";
-          } else if (error.message?.includes('not found')) {
-            errorMessage = "Database configuration error";
-            statusCode = 500;
-          } else if (error.message?.includes('authentication') || error.message?.includes('authorization')) {
-            errorMessage = "Database access error";
-            statusCode = 500;
-          }
-          
-          return NextResponse.json(
-            { 
-              success: false, 
-              message: errorMessage,
-              details: "The database is currently unavailable. Please try again later."
-            },
-            { status: statusCode }
-          );
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 1000 * connectionAttempts));
-      }
+    // Try to connect to database with single attempt (fallback to mock in dev if it fails)
+    let connected = false;
+    let lastConnectionError: any = null;
+    const allowMock = process.env.USE_DB_MOCK === 'true' || process.env.NODE_ENV === 'development';
+
+    try {
+      await dbConnect();
+      connected = true;
+    } catch (error: any) {
+      lastConnectionError = error;
+      console.error('Database connection failed:', error?.message || error);
     }
 
-    // Search Disease collection by disease_name
-    const disease = await DiseaseModel.findOne({
-      disease_name: diseaseName
-    }).lean();
+    if (!connected) {
+      if (allowMock) {
+        const mock = MOCK_DISEASE_DATA[diseaseName as keyof typeof MOCK_DISEASE_DATA];
+        if (!mock) {
+          return NextResponse.json(
+            { success: false, message: "Disease not found (mock)" },
+            { status: 404 }
+          );
+        }
+        const perc = confidence ? Number(confidence) * 100 : 0;
+        return NextResponse.json(
+          { success: true, disease: mock.disease, cure: mock.cure, confidence: perc },
+          { status: 200 }
+        );
+      }
+
+      // No mock allowed: return service unavailable with guidance
+      const devDetails = process.env.NODE_ENV !== 'production' && lastConnectionError ? {
+        error: lastConnectionError?.message || String(lastConnectionError),
+        hint: 'Check IP Access List (Atlas), credentials, and URL-encoding of special chars in the URI.'
+      } : undefined;
+      return NextResponse.json({
+        success: false,
+        message: 'Database temporarily unavailable',
+        details: 'Ensure MONGODB_URI (or DATABASE_URL/MONGODB_ATLAS_URI) is reachable.',
+        ...devDetails,
+      }, { status: 503 });
+    }
+
+    // Normalize disease name and try multiple lookup strategies to handle
+    // different naming conventions between model outputs and DB documents
+    const normalized = (str: string) => str.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+    const nameInput = diseaseName;
+    const nameSpaced = normalized(diseaseName);
+    const codeGuess = nameSpaced
+      .split(' ')
+      .map(w => w[0])
+      .join('')
+      .toUpperCase(); // e.g., Tomato Yellow Leaf Curl Virus -> TYLCV
+
+    let disease = await DiseaseModel.findOne({ disease_name: nameInput }).lean();
+
+    if (!disease) {
+      // Case-insensitive exact match on original
+      disease = await DiseaseModel.findOne({ disease_name: { $regex: `^${nameInput}$`, $options: 'i' } }).lean();
+    }
+
+    if (!disease) {
+      // Try with spaces instead of underscores
+      disease = await DiseaseModel.findOne({ disease_name: nameSpaced }).lean();
+    }
+
+    if (!disease) {
+      // Case-insensitive match on spaced variant
+      disease = await DiseaseModel.findOne({ disease_name: { $regex: `^${nameSpaced}$`, $options: 'i' } }).lean();
+    }
+
+    if (!disease) {
+      // Try matching by disease_code heuristic (e.g., TYLCV)
+      disease = await DiseaseModel.findOne({ disease_code: codeGuess }).lean();
+    }
+
+    if (!disease) {
+      // As a last resort, try to resolve via Cure collection's disease field
+      const cureByName = await CureModel.findOne({ disease: { $in: [nameInput, nameSpaced] } }).lean();
+      if (cureByName?.disease_id) {
+        disease = await DiseaseModel.findById(cureByName.disease_id).lean();
+      }
+    }
 
     if (!disease) {
       console.log("Disease not found");
@@ -75,7 +113,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Get related cure data using disease_id
-    const cure = await CureModel.findOne({ disease_id: disease._id }).lean() || {};
+    const cure = (await CureModel.findOne({ disease_id: disease._id }).lean()) ||
+                 (await CureModel.findOne({ disease: { $in: [nameInput, nameSpaced] } }).lean()) ||
+                 {};
 
     const perc = confidence ? Number(confidence) * 100 : 0;
     // Return combined disease and cure info
