@@ -1,61 +1,55 @@
-"use client";
-import React from 'react';
-import { ArrowLeft, Shield, AlertTriangle, Mail, FileText } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import React from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Home
-              </Button>
-            </Link>
-            <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-green-600" />
-              <h1 className="text-2xl font-bold text-gray-900">Privacy Policy</h1>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
+              Last updated: August 12, 2025
+            </Badge>
+          </div>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Privacy Policy</h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Please read this Privacy Policy carefully before using PlantMD
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Introduction */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-700">
-                <FileText className="w-5 h-5" />
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
+              <CardTitle className="text-green-700">
                 Privacy Policy
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700 leading-relaxed">
+            <CardContent className="prose prose-gray max-w-none p-6">
+              <p>
                 Welcome to PlantMD ("we", "our", or "us"). Your privacy is important to us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application, website, and associated services (collectively, the "Service").
               </p>
-              <p className="text-gray-700 leading-relaxed">
+              <p>
                 By using the PlantMD app, you agree to the terms of this Privacy Policy.
               </p>
             </CardContent>
           </Card>
 
           {/* Important Disclaimer */}
-          <Card className="shadow-lg border-0 bg-red-50 border-red-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-700">
-                <AlertTriangle className="w-5 h-5" />
+          <Card className="border-red-200">
+            <CardHeader className="bg-red-50">
+              <CardTitle className="text-red-700">
                 Important Disclaimer
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <div className="bg-red-100 border border-red-300 rounded-lg p-4">
                 <p className="text-red-800 font-medium mb-2">
                   ⚠️ Plant Diagnosis Disclaimer
@@ -75,8 +69,8 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* Information We Collect */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">1. Information We Collect</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -120,8 +114,8 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* How We Use Your Information */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">2. How We Use Your Information</CardTitle>
             </CardHeader>
             <CardContent>
@@ -139,25 +133,25 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* How We Share Your Information */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">3. How We Share Your Information</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6">
               <p className="text-gray-700">
                 We do not sell your personal information. We may share data:
               </p>
               <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4">
                 <li>With trusted third-party service providers (e.g., analytics, hosting)</li>
                 <li>When required by law, legal process, or governmental request</li>
-                <li>To enforce our Terms and protect the safety of users</li>
+                <li>To enforce our <Link href="/terms" className="text-green-700 underline hover:text-green-700">Terms of Service</Link> and protect the safety of users</li>
               </ul>
             </CardContent>
           </Card>
 
           {/* Data Security */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">4. Data Security</CardTitle>
             </CardHeader>
             <CardContent>
@@ -169,11 +163,11 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* Your Privacy Rights */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">5. Your Privacy Rights</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6">
               <p className="text-gray-700">
                 Depending on your region (e.g., EU/EEA, California):
               </p>
@@ -183,17 +177,14 @@ export default function PrivacyPolicy() {
                 <li>You may have the right to data portability</li>
               </ul>
               <p className="text-gray-700">
-                To exercise your rights, contact us at{' '}
-                <a href="mailto:plantmd.xyz@gmail.com" className="text-green-600 hover:text-green-700 underline">
-                  plantmd.xyz@gmail.com
-                </a>
+                To exercise your rights, contact us. You can find our contact details and ways to reach us in the footer section of our homepage.
               </p>
             </CardContent>
           </Card>
 
           {/* Children's Privacy */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">6. Children's Privacy</CardTitle>
             </CardHeader>
             <CardContent>
@@ -205,8 +196,8 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* Third-Party Links */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">7. Third-Party Links</CardTitle>
             </CardHeader>
             <CardContent>
@@ -218,8 +209,8 @@ export default function PrivacyPolicy() {
           </Card>
 
           {/* Changes to This Policy */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
               <CardTitle className="text-green-700">8. Changes to This Policy</CardTitle>
             </CardHeader>
             <CardContent>
@@ -230,46 +221,26 @@ export default function PrivacyPolicy() {
             </CardContent>
           </Card>
 
-          {/* Contact Us */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-700">
-                <Mail className="w-5 h-5" />
-                9. Contact Us
-              </CardTitle>
+          {/* Contact Information */}
+          <Card className="border-green-200">
+            <CardHeader className="bg-green-50">
+              <CardTitle className="text-green-700">9. Contact Us</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                If you have any questions or concerns about this Privacy Policy, please contact:
-              </p>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-green-600" />
-                  <a 
-                    href="mailto:plantmd.xyz@gmail.com" 
-                    className="text-green-700 hover:text-green-800 font-medium underline"
-                  >
-                    plantmd.xyz@gmail.com
-                  </a>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Effective Date */}
-          <Card className="shadow-lg border-0 bg-gray-50 border-gray-200">
-            <CardContent className="pt-6">
-              <p className="text-sm text-gray-600 text-center">
-                <strong>Effective Date:</strong> {new Date().toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
+            <CardContent className="p-6">
+              <p>
+                If you have any questions about this Privacy Policy, please contact us. You can find our contact details and ways to reach us in the footer section of our homepage.
               </p>
             </CardContent>
           </Card>
         </div>
+
+        <Separator className="my-8" />
+        
+        {/* Footer */}
+        <div className="text-center text-sm text-gray-500">
+          <p>© 2025 PlantMD. All rights reserved.</p>
+        </div>
       </div>
     </div>
-  );
-} 
+  )
+}

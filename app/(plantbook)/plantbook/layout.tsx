@@ -1,30 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Poppins } from "next/font/google"
 import Footer from "@/components/Layout/Footer"
 import Header from "@/components/Layout/Header"
 import Providers from "@/components/plantbook/Providers"
 import "@/app/(app)/globals.css"
 import { AppSidebar } from "@/components/plantbook/Sidebar/Sidebar"
-import { Roboto, Lato, Oswald } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] })
-const roboto = Roboto({
+const poppins = Poppins({ 
   subsets: ["latin"],
-  weight: "300",
-  variable: "--font-roboto",
-});
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-oswald",
-});
-
-const lato = Lato({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-lato',
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 })
 
 export const metadata: Metadata = {
@@ -39,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <Providers>
-          <div className={`flex ${roboto.variable} ${lato.variable} ${oswald.variable}`}>
+          <div className={`flex ${poppins.variable}`}>
             <AppSidebar />
 
             <div className="flex-1 flex flex-col">

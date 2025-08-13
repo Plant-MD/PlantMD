@@ -77,7 +77,7 @@ const data = {
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} className="mt-20 font-roboto w-1/5 ">
+    <Sidebar collapsible="icon" {...props} className="mt-20 font-poppins w-1/5 ">
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

@@ -4,6 +4,9 @@ import { authOptions } from '@/app/api/(authentication)/auth/[...nextauth]/optio
 import dbConnect from '@/lib/dbConnect';
 import TaskModel from '@/models/Task';
 
+// Force this route to be dynamic (not prerendered)
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch all tasks
 export async function GET(request: NextRequest) {
   try {

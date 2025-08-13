@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
-import { Roboto, Lato, Oswald } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { SessionProvider } from 'next-auth/react';
 // import { SessionProvider } from 'next-auth/react'; // Temporarily disabled for static export
 
@@ -11,23 +11,11 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const roboto = Roboto({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: "300",
-  variable: "--font-roboto",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-oswald",
-});
-
-const lato = Lato({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-lato',
-})
 
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -37,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <SessionProvider>
-      <div className={` bg-gradient-to-br from-cream via-white to-pale ${roboto.variable} ${lato.variable} ${oswald.variable}`}>
+      <div className={` bg-gradient-to-br from-cream via-white to-pale ${poppins.variable}`}>
         <main className="">
           {children}
         </main>

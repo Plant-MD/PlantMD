@@ -54,9 +54,9 @@ export const dbConnect = async (): Promise<void> => {
       nodeEnv: process.env.NODE_ENV
     });
     
-    // In development, allow the app to continue with mock data
-    if (process.env.NODE_ENV === 'development') {
-      console.log("Development mode: Continuing without database connection");
+    // In development or build time, allow the app to continue with mock data
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
+      console.log("No database URI available: Continuing without database connection");
       return;
     }
     

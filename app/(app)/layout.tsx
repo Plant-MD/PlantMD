@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Poppins } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import { EnhancedToastProvider } from "@/hooks/useEnhancedToast"
 import Layout from "@/components/Layout/layout"
@@ -9,7 +9,10 @@ import Header from "@/components/Layout/Header"
 import PostHogProvider from "@/components/PostHogProvider"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const poppins = Poppins({ 
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"]
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://plant-md.github.io"),
@@ -69,7 +72,7 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-title" content="Plant MD" />
       </head>
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <PostHogProvider>
           <EnhancedToastProvider>
             <Layout>
