@@ -69,53 +69,56 @@ function PlantBook() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
-      {isAuthenticated ? (
-        <div className="min-h-screen flex flex-col px-4 pt-5 bg-white">
-          <div className="flex flex-1 w-full px-10">
-            <div className="w-[850px] mx-auto bg-white rounded shadow-lg p-6">
-              <div className="p-4 rounded shadow text-center text-green-800 flex flex-col gap-3">
-                {threads.length > 0 ? (
-                  threads.map((thread) => (
-                    <ThreadCard key={thread._id} thread={thread} />
-                  ))
-                ) : (
-                  <p>No posts found.</p>
-                )}
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 flex flex-row">
+      <AppSidebar />
+      <div className="flex-1">
+        {isAuthenticated ? (
+          <div className="min-h-screen flex flex-col px-2 pt-3 bg-white sm:px-4 sm:pt-5">
+            <div className="flex flex-1 w-full px-0 sm:px-4 md:px-10">
+              <div className="w-full max-w-full md:w-[850px] mx-auto bg-white rounded shadow-lg p-2 sm:p-4 md:p-6">
+                <div className="p-2 sm:p-4 rounded shadow text-center text-green-800 flex flex-col gap-3">
+                  {threads.length > 0 ? (
+                    threads.map((thread) => (
+                      <ThreadCard key={thread._id} thread={thread} />
+                    ))
+                  ) : (
+                    <p>No posts found.</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="relative flex items-center justify-center min-h-[70vh]">
-          {/* Glass blur overlay popup */}
-          <Dialog
-            open={showAuthPopup}
-            onOpenChange={(open) => {
-              setShowAuthPopup(open)
-              if (!open) router.push('/')
-            }}
-          >
-            <DialogContent
-              className="bg-white rounded-xl shadow-2xl"
-              style={{ backdropFilter: "blur(4px)" }}
+        ) : (
+          <div className="relative flex items-center justify-center min-h-[70vh]">
+            {/* Glass blur overlay popup */}
+            <Dialog
+              open={showAuthPopup}
+              onOpenChange={(open) => {
+                setShowAuthPopup(open)
+                if (!open) router.push('/')
+              }}
             >
-              <DialogHeader>
-                <DialogTitle className="text-center text-2xl font-semibold text-forest-green">
-                  Sign in required
-                </DialogTitle>
-              </DialogHeader>
-              <div className="text-center text-neutral-gray">
-                <p className="mb-6">Sign in to access and participate in the PlantBook community.</p>
-                <Button onClick={() => signIn('google')} className="bg-green-600 hover:bg-leaf-green text-white border-0">
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Sign in with Google
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-      )}
+              <DialogContent
+                className="bg-white rounded-xl shadow-2xl"
+                style={{ backdropFilter: "blur(4px)" }}
+              >
+                <DialogHeader>
+                  <DialogTitle className="text-center text-2xl font-semibold text-forest-green">
+                    Sign in required
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="text-center text-neutral-gray">
+                  <p className="mb-6">Sign in to access and participate in the PlantBook community.</p>
+                  <Button onClick={() => signIn('google')} className="bg-green-600 hover:bg-leaf-green text-white border-0">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Sign in with Google
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
