@@ -11,9 +11,11 @@ import { useEnhancedToast } from "@/hooks/useEnhancedToast";
 import { useDiagnosisPipeline } from "@/hooks/useDiagnosisPipeline";
 import CameraView from "@/components/scan/CameraView";
 import { Button } from "@/components/ui/button";
+import PlantTypeSelector from "./PlantSelector";
 
 function Hero() {
   const [showUploadPopup, setShowUploadPopup] = useState(false);
+
   const router = useRouter();
   const toast = useEnhancedToast();
   const diagnosisPipeline = useDiagnosisPipeline();
@@ -25,6 +27,7 @@ function Hero() {
 
   const { 
     selectedPlant, 
+    setSelectedPlant,
     handleStartCamera, 
     handleBrowseFiles,
     showCamera,
@@ -35,8 +38,7 @@ function Hero() {
 
   const handlePopupAnalyze = (
     imageData: string,
-    plantType: "tomato" | "corn"
-  ) => {
+    plantType: "tomato" | "corn" | "rice" | "potato"  ) => {
     console.log("handlePopupAnalyze called with:", {
       hasImage: !!imageData,
       plantType,
@@ -67,8 +69,33 @@ function Hero() {
 
   const [initialImageData, setInitialImageData] = useState<string | null>(null);
 
+  // Modified handlers to check for plant selection
+  const handleStartCameraWithPlantCheck = () => {
+    if (!selectedPlant) {
+      toast.error("Plant Type Required", "Please select a plant type first", 3000, "plant-type");
+      return;
+    }
+    handleStartCamera();
+  };
+
+  const handleBrowseFilesWithPlantCheck = () => {
+    if (!selectedPlant) {
+      toast.error("Plant Type Required", "Please select a plant type first", 3000, "plant-type");
+      return;
+    }
+    handleBrowseFiles();
+  };
+
   const handleFileDrop = (files: FileList) => {
     console.log("handleFileDrop called with files:", files);
+    
+    // Check if plant type is selected first
+    if (!selectedPlant) {
+      toast.error("Plant Type Required", "Please select a plant type first", 3000, "plant-type");
+      return;
+    }
+
+    // Existing file drop logic
     const file = files[0];
     if (!file) {
       console.log("No file provided");
@@ -127,6 +154,8 @@ function Hero() {
     reader.readAsDataURL(file);
   };
 
+
+
   return (
     <section className="relative top-0 flex min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 overflow-hidden">
       {/* Animated Background Blobs */}
@@ -182,13 +211,6 @@ function Hero() {
         </svg>
       </div>
 
-      {/* Dancing GIF
-      <img
-        src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWJ6MXM5b2syZnduaDA5MjV5c2xkdnF3cjRja2l3cTlja3JoMzNxYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/n6P4pwFUUBJCcAQnTY/giphy.gif"
-        alt="Dancing Duck"
-        className="w-32 md:w-48 h-auto rounded-lg absolute right-[200px] top-10 z-10"
-      /> */}
-
       {/* Main Content Split */}
       <div className="flex w-full h-screen">
         {/* Left - Full image cover */}
@@ -214,9 +236,21 @@ function Hero() {
             </div>
           </div>
 
+          {/* Plant Type Selection Dropdown */}
+          <div className="mb-6 w-full max-w-md">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Plant Type
+            </label>
+            <PlantTypeSelector
+              selectedPlant={selectedPlant}
+              onSelectPlant={setSelectedPlant}
+            />
+          </div>
+
           <DragOverComponent
             onDrop={handleFileDrop}
-            onTakePhoto={handleStartCamera}
+            onTakePhoto={handleStartCameraWithPlantCheck}
+            onBrowseFiles={handleBrowseFilesWithPlantCheck}
             title="Upload Plant Photo"
             subtitle="Get instant diagnosis & treatment"
           />
@@ -242,6 +276,8 @@ function Hero() {
           </div>
         </div>
       </div>
+
+
 
       <UploadPopup
         isOpen={showUploadPopup}
@@ -278,7 +314,9 @@ function Hero() {
             />
           </div>
         </div>
-      )}      {cameraHook.cameraError && (
+      )}
+
+      {cameraHook.cameraError && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold text-red-600 mb-2">Camera Error</h3>

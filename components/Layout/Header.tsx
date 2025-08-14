@@ -19,7 +19,6 @@ function Header() {
     { label: "About Us", href: "#about", homeOnly: true, external: false },
     { label: "Tutorial", href: "#tutorial", homeOnly: true, external: false },
     { label: "Contact", href: "#footer", homeOnly: false, external: false },
-    { label: "Community", href: "community", homeOnly: false, external: false },
     {
       label: "Plant Calendar",
       href: "#calendar",

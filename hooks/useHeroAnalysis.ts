@@ -4,24 +4,34 @@ import { useSession } from 'next-auth/react';
 import { useCamera } from '@/hooks/useCamera';
 import { useImageUpload } from '@/hooks/useImageUpload';
 
+// Updated type to match PlantSelector
+type PlantType = "tomato" | "corn" | "rice" | "potato";
+
 export const useHeroAnalysis = () => {
     const { data: session } = useSession();
     const router = useRouter();
 
     const [isProcessing, setIsProcessing] = useState(false);
     const [showCamera, setShowCamera] = useState(false);
-    const [selectedPlant, setSelectedPlant] = useState<'tomato' | 'corn'>('tomato');
+    const [selectedPlant, setSelectedPlantState] = useState<PlantType | null>(null);
 
     const cameraHook = useCamera();
     const uploadHook = useImageUpload();
 
     // Load plant type from localStorage on component mount
     useEffect(() => {
-        const storedPlantType = localStorage.getItem('selectedPlantType') as 'tomato' | 'corn';
-        if (storedPlantType) {
-            setSelectedPlant(storedPlantType);
+        const storedPlantType = localStorage.getItem('selectedPlantType') as PlantType;
+        if (storedPlantType && ['tomato', 'corn', 'rice', 'potato'].includes(storedPlantType)) {
+            setSelectedPlantState(storedPlantType);
         }
     }, []);
+
+    // Main setSelectedPlant function that handles both state and localStorage
+    const setSelectedPlant = (plant: PlantType) => {
+        console.log('Setting selected plant to:', plant);
+        setSelectedPlantState(plant);
+        localStorage.setItem('selectedPlantType', plant);
+    };
 
     const dataURLtoBlob = (dataURL: string) => {
         const arr = dataURL.split(',');
@@ -57,12 +67,17 @@ export const useHeroAnalysis = () => {
         uploadHook.browseFiles();
     };
 
-    const handleAnalyze = async (plantType?: 'tomato' | 'corn') => {
+    const handleAnalyze = async (plantType?: PlantType) => {
         const plantToAnalyze = plantType || selectedPlant;
         console.log('handleAnalyze called with plant type:', plantToAnalyze);
 
         if (!uploadHook.selectedImage) {
             console.error('No image available for analysis');
+            return;
+        }
+
+        if (!plantToAnalyze) {
+            console.error('No plant type selected for analysis');
             return;
         }
 
@@ -114,12 +129,6 @@ export const useHeroAnalysis = () => {
         setShowCamera(false);
     };
 
-    // Save plant type to localStorage whenever it changes
-    const handlePlantChange = (plant: 'tomato' | 'corn') => {
-        setSelectedPlant(plant);
-        localStorage.setItem('selectedPlantType', plant);
-    };
-
     const handleDismissError = () => {
         cameraHook.setCameraError(null);
     };
@@ -129,9 +138,9 @@ export const useHeroAnalysis = () => {
         isProcessing,
         showCamera,
         selectedPlant,
+        setSelectedPlant, // This is the main function Hero.tsx needs
 
         cameraHook,
-
         uploadHook,
 
         handleStartCamera,
@@ -140,7 +149,6 @@ export const useHeroAnalysis = () => {
         handleBrowseFiles,
         handleAnalyze,
         handleClearImage,
-        handlePlantChange,
         handleDismissError,
     };
 };
