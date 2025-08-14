@@ -125,9 +125,9 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
 
   return (
     <>
-      <div className="bg-white text-green-700 rounded-xl shadow-md p-4 flex gap-4 w-full max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
+  <div className="bg-white text-green-700 rounded-xl shadow-md p-2 sm:p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 w-full max-w-full sm:max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
         {/* Upvote Section */}
-        <div className="flex flex-col items-center gap-2">
+  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-2 mb-2 sm:mb-0">
           <button
             onClick={handleUpvote}
             className={`hover:text-green-900 ${
@@ -150,7 +150,7 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
         </div>
 
         {/* Main Thread Content */}
-        <div className="flex flex-col w-full">
+  <div className="flex flex-col w-full">
           {/* Title + Author */}
           <div className="flex flex-col justify-start">
             <div className="flex items-center gap-2 mb-1">

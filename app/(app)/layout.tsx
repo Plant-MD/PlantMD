@@ -77,6 +77,7 @@ export default function RootLayout({
           <EnhancedToastProvider>
             <Layout>
               <Header/>
+              {/* App Tour removed */}
               {children}
             </Layout>
             <Footer />

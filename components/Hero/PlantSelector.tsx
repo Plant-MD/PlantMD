@@ -41,7 +41,7 @@ const PlantTypeSelector: React.FC<PlantTypeSelectorProps> = ({
   const selectedPlantData = plantTypes.find(p => p.value === selectedPlant);
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div id="plant-selector" className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-left shadow-sm hover:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
