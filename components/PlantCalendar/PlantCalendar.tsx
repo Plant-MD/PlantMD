@@ -239,22 +239,26 @@ export default function PlantCalendar() {
             Stay organized with your plant care routine. Schedule watering, fertilizing, and other important tasks to keep your plants healthy and thriving.
           </p>
           {!isAuthenticated && (
-            <div className="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Calendar className="w-6 h-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-yellow-800">Sign in to access your Plant Calendar</h3>
-              </div>
-              <p className="text-yellow-700 mb-4">
-                Create and manage your plant care tasks. Your data will be securely stored and synced across all your devices.
-              </p>
-              <Button 
-                                            onClick={() => signIn('google')}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Sign in with Google
-              </Button>
-            </div>
+            <Dialog open>
+              <DialogContent className="bg-white">
+                <DialogHeader>
+                  <DialogTitle className="text-center text-green-900 font-semibold text-lg">Sign in required</DialogTitle>
+                </DialogHeader>
+                <p className="text-center text-gray-500 mb-6">
+                  Sign in to access and participate in the PlantBook community.
+                </p>
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() => signIn('google')}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md px-6 py-3 flex items-center gap-2 text-base border-0"
+                    style={{ boxShadow: 'none' }}
+                  >
+                    <LogIn className="w-5 h-5" />
+                    Sign in with Google
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           )}
           {loading && (
             <div className="flex items-center justify-center mt-4">

@@ -19,10 +19,11 @@ function Header() {
     { label: "About Us", href: "#about", homeOnly: true, external: false },
     { label: "Tutorial", href: "#tutorial", homeOnly: true, external: false },
     { label: "Contact", href: "#footer", homeOnly: false, external: false },
+
     {
       label: "Plant Calendar",
-      href: "#calendar",
-      homeOnly: true,
+      href: "/plant-calendar",
+      homeOnly: false,
       external: false,
     },
     {
@@ -62,11 +63,11 @@ function Header() {
             <div className="">
               <Image src="logo.png" alt="PlantMD Logo" width={64} height={64} />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl sm:text-2xl font-bold font-oswald tracking-wider text-left bg-black bg-clip-text text-transparent">
-                PlantMD
-              </h1>
-            </div>
+                  <div className="hidden sm:block mr-4" style={{ marginLeft: '-12px' }}>
+                    <h1 className="text-xl sm:text-2xl font-extrabold font-oswald tracking-wider text-left bg-black bg-clip-text text-transparent">
+                      PlantMD
+                    </h1>
+                  </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-lg font-medium">
             {navLinks.map(({ label, href, external }) => (
@@ -85,7 +86,7 @@ function Header() {
             {session && (
               <Link
                 href="/feedback"
-                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-roboto"
+                className="bg-white border-2 border-green-600 text-green-700 px-4 lg:px-6 py-1 transition-all duration-300 shadow-sm hover:shadow-md font-roboto rounded-md"
               >
                 Give Feedback
               </Link>
