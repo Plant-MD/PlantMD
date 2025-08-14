@@ -9,11 +9,11 @@ import { Badge } from "@/components/ui/badge";
 interface UploadPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onAnalyze: (imageData: string, plantType: "tomato" | "corn") => void;
+  onAnalyze: (imageData: string, plantType: "tomato" | "corn"| "rice" | "potato") => void;
   onBrowseFiles: () => void; // New callback prop
   isProcessing?: boolean;
   initialImageData?: string | null;
-  selectedPlantType: "tomato" | "corn";
+  selectedPlantType: "tomato" | "corn" | "rice" | "potato";
 }
 
 const UploadPopup: React.FC<UploadPopupProps> = ({
