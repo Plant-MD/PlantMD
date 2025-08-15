@@ -15,7 +15,7 @@ export default function CreatePostButton() {
       <button
     id="create-post-btn"
     onClick={openModal}
-    className="bg-white text-deep-mint px-4 font-sans border-2 border-deep-mint py-2 flex justify-center gap-2 items-center  transition mb-8"
+    className="bg-white text-deep-mint px-4 font-sans border-2 border-deep-mint py-2 flex justify-center gap-2 items-center  transition md:mb-8"
       >
         Create
       </button>

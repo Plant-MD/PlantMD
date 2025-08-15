@@ -37,7 +37,7 @@ export default function ThreadCard({ thread }: { thread: ThreadDB }) {
   const [voteCount, setVoteCount] = useState(thread.vote);
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
+  const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
 
   async function fetchComments() {
     setLoadingComments(true);
@@ -125,14 +125,13 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
 
   return (
     <>
-  <div className="bg-white text-green-700 rounded-xl shadow-md p-2 sm:p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 w-full max-w-full sm:max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
+      <div className="bg-white text-green-700 rounded-xl shadow-md p-2 sm:p-4 flex flex-col sm:flex-row gap-2 sm:gap-4 w-full max-w-full sm:max-w-3xl border border-gray-200 cursor-pointer hover:bg-gray-50">
         {/* Upvote Section */}
-  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-2 mb-2 sm:mb-0">
+        <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-2 mb-2 sm:mb-0">
           <button
             onClick={handleUpvote}
-            className={`hover:text-green-900 ${
-              voteStatus === "upvoted" ? "text-green-900" : ""
-            }`}
+            className={`hover:text-green-900 ${voteStatus === "upvoted" ? "text-green-900" : ""
+              }`}
             aria-label="Upvote"
           >
             <ArrowUp className="w-5 h-5" />
@@ -140,9 +139,8 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
           <span className="font-semibold">{voteCount}</span>
           <button
             onClick={handleDownvote}
-            className={`hover:text-green-900 ${
-              voteStatus === "downvoted" ? "text-green-900" : ""
-            }`}
+            className={`hover:text-green-900 ${voteStatus === "downvoted" ? "text-green-900" : ""
+              }`}
             aria-label="Downvote"
           >
             <ArrowDown className="w-5 h-5" />
@@ -150,13 +148,13 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
         </div>
 
         {/* Main Thread Content */}
-  <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full">
           {/* Title + Author */}
           <div className="flex flex-col justify-start">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-7 h-7 rounded-full overflow-hidden">
                 <Image
-                  src="/default_avatar.jpg"
+                  src="/placeholder-user.jpg"
                   alt="avatar"
                   width={28}
                   height={28}
@@ -215,9 +213,9 @@ const hasMedia = thread.media?.length > 0 && thread.media[0].contentType;
             onClose={() => setIsCommentsOpen(false)}
             comments={comments}
             loading={loadingComments}
-             threadId={thread._id} // Pass the thread ID
-         author={thread.author} // Pass the author
-         refreshComments={fetchComments}
+            threadId={thread._id} // Pass the thread ID
+            author={thread.author} // Pass the author
+            refreshComments={fetchComments}
           />
         </div>
       </div>
