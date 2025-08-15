@@ -77,7 +77,7 @@ const data = {
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props} className="mt-20 font-poppins w-48 min-w-[60px] max-w-xs">
+    <Sidebar {...props} className="mt-20 font-poppins w-48 min-w-[60px] ">
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

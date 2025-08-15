@@ -99,33 +99,33 @@ export default function CreatePostModal({ onClose }: CreatePostModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{ backdropFilter: "blur(4px)" }}
-    >
-      <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative z-10 flex flex-col w-full max-w-2xl h-[70vh] mx-auto bg-white rounded-xl shadow-2xl"
-      >
-        <ModalHeader onClose={onClose} />
-        <ModalContent
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          uploadedImage={uploadedImage}
-          handleImageUpload={handleImageUpload}
-          removeImage={removeImage}
-          fileInputRef={fileInputRef}
-          tags={tags}
-        />
-        <ModalFooter
-          onCancel={onClose}
-          onPost={handlePost}
-          disabled={!title.trim() || !description.trim()}
-        />
-      </div>
-    </div>
+  className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-4 "
+  style={{ backdropFilter: "blur(4px)" }}
+>
+  <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
+  <div
+    onClick={(e) => e.stopPropagation()}
+    className="relative z-10 flex flex-col w-full sm:max-w-2xl sm:h-[70vh]  mx-auto my-auto bg-white rounded-xl shadow-2xl align-center"
+  >
+    <ModalHeader onClose={onClose} />
+    <ModalContent
+      title={title}
+      setTitle={setTitle}
+      description={description}
+      setDescription={setDescription}
+      uploadedImage={uploadedImage}
+      handleImageUpload={handleImageUpload}
+      removeImage={removeImage}
+      fileInputRef={fileInputRef}
+      tags={tags}
+    />
+    <ModalFooter
+      onCancel={onClose}
+      onPost={handlePost}
+      disabled={!title.trim() || !description.trim()}
+    />
+  </div>
+</div>
   );
 }
 
@@ -168,7 +168,7 @@ function ModalContent({
   tags,
 }: ModalContentProps) {
   return (
-    <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+    <div className="flex-1 p-6 space-y-4 ">
       {/* Title */}
       <div>
         <input
