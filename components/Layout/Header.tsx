@@ -17,7 +17,6 @@ function Header() {
 
   const allNavLinks = [
     { label: "About Us", href: "#about", homeOnly: true, external: false },
-    { label: "Tutorial", href: "#tutorial", homeOnly: true, external: false },
     { label: "Contact", href: "#footer", homeOnly: false, external: false },
 
     {
