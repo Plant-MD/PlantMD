@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 interface PlantTypeSelectorProps {
-  selectedPlant: "tomato" | "corn" | "rice" | "potato" | null;
-  onSelectPlant: (plant: "tomato" | "corn" | "rice" | "potato") => void;
+  selectedPlant: "tomato" | "corn" | null;
+  onSelectPlant: (plant: "tomato" | "corn") => void;
   className?: string;
 }
 
@@ -17,8 +17,7 @@ const PlantTypeSelector: React.FC<PlantTypeSelectorProps> = ({
   const plantTypes = [
     { value: "tomato" as const, label: "Tomato", icon: "🍅" },
     { value: "corn" as const, label: "Corn", icon: "🌽" },
-    { value: "rice" as const, label: "Rice", icon: "🌾" },
-    { value: "potato" as const, label: "Potato", icon: "🥔" }
+  // ...existing code...
   ];
 
   // Close dropdown when clicking outside
@@ -33,7 +32,7 @@ const PlantTypeSelector: React.FC<PlantTypeSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (plantType: "tomato" | "corn" | "rice" | "potato") => {
+  const handleSelect = (plantType: "tomato" | "corn") => {
     onSelectPlant(plantType);
     setIsOpen(false);
   };

@@ -70,6 +70,7 @@ function PlantBook() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 flex flex-row">
+      <AppSidebar />
       <div className="flex-1">
         {isAuthenticated ? (
           <div className="min-h-screen flex flex-col px-2 pt-3 bg-white sm:px-4 sm:pt-5">
